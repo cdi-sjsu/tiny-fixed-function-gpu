@@ -1,7 +1,9 @@
 # Tiny Fixed Function GPU
 
 A CDI SJSU project to build a fixed-function 3D graphics accelerator in
-Verilog/SystemVerilog for an FPGA with VGA output.
+SystemVerilog targeting the
+[Digilent Arty S7-50](https://digilent.com/shop/arty-s7-spartan-7-fpga-development-board/)
+FPGA with VGA output.
 
 ## Project and Teams
 
