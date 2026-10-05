@@ -7,6 +7,23 @@ The repository currently contains development infrastructure and subsystem plann
 notes. There is no implemented RTL or hardware simulation suite yet. The invalid
 placeholder wrapper has been removed.
 
+## Project and teams
+
+Track work on the [Fall 2026 Club Project board](https://github.com/orgs/cdi-sjsu/projects/1).
+GitHub issues and the board are the authoritative sources for progress, assignments,
+and deadlines. The four engineering deliverables below remain open; their current
+issue deadlines are October 10, 2026. Planning documentation does not complete them.
+
+| Team | Responsibility | Lead | Source directory | Issue label | Current task |
+| --- | --- | --- | --- | --- | --- |
+| [GPU Rasterizer](https://github.com/orgs/cdi-sjsu/teams/gpu-rasterizer) | Triangle rasterization, depth, and color | [@Nativity8904](https://github.com/Nativity8904) | [rtl/rasterizer/](rtl/rasterizer/README.md) | Rasterizer Team | [#3: Algorithm comparison and recommendation](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/3) |
+| [GPU Geometry](https://github.com/orgs/cdi-sjsu/teams/gpu-geometry) | Vertex transforms and triangle interfaces | [@nicojeda189](https://github.com/nicojeda189) | [rtl/geometry_engine/](rtl/geometry_engine/README.md) | Geometry Team | [#4: Preliminary Geometry Engine interface](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/4) |
+| [GPU Python Preprocessing](https://github.com/orgs/cdi-sjsu/teams/gpu-python-preprocessing) | Preprocessing scripts and generated GPU data | To be decided | [scripts/](scripts/README.md) | Python Preprocessing Team | [#5: Sine LUT and FPGA initialization research](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/5) |
+| [GPU VGA](https://github.com/orgs/cdi-sjsu/teams/gpu-vga) | Framebuffer and VGA display output | To be decided | [rtl/vga_controller/](rtl/vga_controller/README.md) | VGA Team | [#6: Framebuffer and VGA Controller interface](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/6) |
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for branches, issue-linked PRs, team reviews,
+required checks, and signing guidance.
+
 ## Required development environment
 
 Open this repository in its VS Code Dev Container. It provides pinned Verilator,
@@ -61,11 +78,12 @@ rtl/                 Future Verilog/SystemVerilog sources
   geometry_engine/   Geometry subsystem planning notes
   rasterizer/        Rasterizer planning notes
   vga_controller/    VGA controller planning notes
-scripts/             Future mesh preprocessing scripts
+scripts/             Python preprocessing overview and future LUT/mesh scripts
 tests/
   cocotb/            Simulation runner and future hardware testbenches
   tools/             Infrastructure and EDAM consistency tests
 tools/               Shared HDL discovery and quality workflows
+CONTRIBUTING.md      Repository contributor and review workflow
 edam.yml             TerosHDL source list and future top-level selection
 pyproject.toml       Python dependencies and tool configuration
 uv.lock              Locked Python environment
@@ -109,14 +127,17 @@ for verifying existing PGP commits, setting up SSH signing, and sharing the host
 with the container. Signing is configured per contributor; container creation does not import
 keys or change Git signing settings.
 
-## Phase 1 goals
+## Phase 1 direction
 
-- Convert OBJ mesh vertices into Q8.8 fixed-point lookup tables suitable for FPGA memory.
-- Build a geometry engine for scaling, rotation, translation, and perspective projection.
-- Connect geometry and rasterization through a ready/valid handshake.
-- Rasterize projected triangles, with Pineda/edge functions as the initial candidate;
-  interpolate depth and color.
-- Store frames in a BRAM framebuffer and drive 640 × 480 VGA at 60 Hz.
+- Preprocess mesh data for FPGA use and produce a sine LUT. Issue #5 targets 16-bit
+  LUT entries; dimensions, numeric representation, and initialization remain pending.
+- Build a geometry engine for scaling, rotation, translation, and perspective
+  projection. Issue #4 will define Q8.8 usage, triangle formats, ports, and handshakes.
+- Rasterize projected triangles and handle depth and color. The Phase 1 rasterization
+  algorithm remains pending the comparison and recommendation in issue #3.
+- Store frames in BRAM and drive 640 × 480 VGA at 60 Hz. Issue #6 specifies a
+  25.175 MHz pixel clock and RGB444 target; timing, BRAM access, and the comparison
+  with 2× scaled 320 × 240 output still need an interface document.
 
 Later phases may explore soft-core CPUs and programmable shaders. Board-specific
 Vivado projects, constraints, and synthesis workflows will be defined as the hardware
