@@ -16,6 +16,8 @@ the authoritative sources for task progress and deadlines. Use the
 label, and source directory. Keep task status accurate; documentation cleanup
 does not complete the engineering deliverables in issues #3–#6.
 
+## Member workflow
+
 1. Update local `main` from the remote, then create a focused branch such as
    `docs/geometry-interface` or `feat/sine-lut`. Fork first if you lack write access.
 2. Link the relevant issue in the PR description and explain the resulting behavior
@@ -24,26 +26,32 @@ does not complete the engineering deliverables in issues #3–#6.
 3. Run `make format` after code changes and `make ci` before requesting review.
    Review documentation links and paths too. With no RTL, HDL checks and the hardware
    simulation explicitly skip; passing infrastructure checks is not hardware coverage.
-4. Open a PR targeting `main` and request review from the relevant subsystem team:
+4. Open a PR targeting `main` and request review from `@cdi-sjsu/gpu-leads`.
+   Every PR requires approval from one eligible GPU lead, including code,
+   documentation, infrastructure, and changes to `.github/CODEOWNERS`.
+   Regular members' approvals do not satisfy the code-owner requirement.
+5. Address feedback, rerun checks after changes, and resolve review conversations
+   before squash-merging.
 
-   | Area | Review team | Issue label |
-   | --- | --- | --- |
-   | Rasterization | `@cdi-sjsu/gpu-rasterizer` | Rasterizer Team |
-   | Geometry | `@cdi-sjsu/gpu-geometry` | Geometry Team |
-   | Python preprocessing and LUTs | `@cdi-sjsu/gpu-python-preprocessing` | Python Preprocessing Team |
-   | Framebuffer and VGA | `@cdi-sjsu/gpu-vga` | VGA Team |
+## Lead workflow
 
-   For shared infrastructure or cross-subsystem changes, involve
-   `@cdi-sjsu/gpu` and the affected subsystem teams. If a team has no available
-   reviewers, ask a GPU maintainer to review.
+Review the linked issue, changes, and validation, then approve when ready. One
+eligible lead's approval is sufficient; both leads do not need to approve.
+For a lead-authored PR, another lead reviews and approves it. The latest reviewable
+push must be approved by someone other than its pusher.
+
+The visible `@cdi-sjsu/gpu-leads` team contains `Nativity8904` and `nicojeda189` and
+has explicit write access to this repository. Add future leads to this team when
+appointed so they can satisfy the ownership requirement for every path.
 
 ## Merge requirements
 
 - The GitHub Actions job named `check` must pass for the current PR commit.
 - The branch must be up to date with `main`; rerun CI after updating it.
 - Resolve all review conversations.
-- Obtain one approval. Reviewable pushes dismiss stale approvals, and someone other
-  than the latest pusher must approve the latest reviewable push.
+- Obtain one approval from an eligible member of `@cdi-sjsu/gpu-leads`. Reviewable
+  pushes dismiss stale approvals, and someone other than the latest pusher must
+  approve the latest reviewable push.
 - Squash and merge through a PR. Direct pushes, force pushes, and deletion of `main`
   are protected. Use a clear PR title and description for the resulting commit.
 
