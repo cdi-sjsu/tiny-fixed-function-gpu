@@ -22,10 +22,9 @@ beside the sources here, and link them from this overview and issue #6 when avai
 Coordinate framebuffer writes and pixel consumption with the rasterizer team.
 Board-specific clocks, constraints, and synthesis setup will follow the design.
 
-Use the [Dev Container and Make workflows](../../README.md#workflows). When adding
+Use the [Dev Container and Make workflows](../../README.md#make-workflows). When adding
 RTL, update `edam.yml` and register a Cocotb suite in `tests/cocotb/test_runner.py`
-with its testbench under `tests/cocotb/`, following the
-[RTL registration instructions](../../README.md#adding-the-first-rtl-and-simulation).
+with its testbench under `tests/cocotb/`.
 Run `make format`, `make check`, and `make waves`; run `make ci` before review.
 Until RTL exists, HDL checks and hardware simulation explicitly skip.
 
