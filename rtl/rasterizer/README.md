@@ -19,10 +19,9 @@ the sources here, and link them from this overview and issue #3 when available.
 Document triangle inputs, generated fragments, depth/color behavior, and integration
 with geometry and framebuffer interfaces as those decisions are made.
 
-Use the [Dev Container and Make workflows](../../README.md#workflows). When adding
+Use the [Dev Container and Make workflows](../../README.md#make-workflows). When adding
 RTL, update `edam.yml` and register a Cocotb suite in `tests/cocotb/test_runner.py`
-with its testbench under `tests/cocotb/`, following the
-[RTL registration instructions](../../README.md#adding-the-first-rtl-and-simulation).
+with its testbench under `tests/cocotb/`.
 Run `make format`, `make check`, and `make waves`; run `make ci` before review.
 Until RTL exists, HDL checks and hardware simulation explicitly skip.
 

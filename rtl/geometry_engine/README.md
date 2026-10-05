@@ -21,10 +21,9 @@ the sources here. Link them from this overview and issue #4 when available. Incl
 when data is valid and accepted, and coordinate the interfaces with rasterization
 and Python preprocessing.
 
-Use the [Dev Container and Make workflows](../../README.md#workflows). When adding
+Use the [Dev Container and Make workflows](../../README.md#make-workflows). When adding
 RTL, update `edam.yml` and register a Cocotb suite in `tests/cocotb/test_runner.py`
-with its testbench under `tests/cocotb/`, following the
-[RTL registration instructions](../../README.md#adding-the-first-rtl-and-simulation).
+with its testbench under `tests/cocotb/`.
 Run `make format`, `make check`, and `make waves`; run `make ci` before review.
 Until RTL exists, HDL checks and hardware simulation explicitly skip.
 
