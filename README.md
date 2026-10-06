@@ -43,10 +43,20 @@ The Dev Container includes TerosHDL and its dependencies. To load this project:
 4. In the file picker, select `edam.yml` from the repository root, then select
    **Select YAML EDAM files**.
 5. Select `tiny_fixed_function_gpu` to make it the current project.
+6. In the **Sources** list, right-click `rtl/top.sv` and choose
+   **Select source as toplevel**.
 
-The project currently has an empty source list and no top-level module. Files and
-hierarchy become available after RTL sources and `toplevel` are registered in
-`edam.yml`.
+The EDAM project registers `rtl/top.sv` and names module `top` as its root.
+This is a minimal shell with no ports or subsystem instances yet. Its Cocotb smoke
+test checks elaboration and simulation startup; GPU functionality will follow.
+
+TerosHDL 7.0.3 imports the `toplevel` field as a source path rather than a module
+name, so step 6 selects the root in TerosHDL. Keep `toplevel: top` in `edam.yml`
+because the command-line lint workflow expects a module name.
+
+If you previously loaded the empty project, remove its entry from TerosHDL's
+Projects list and repeat the loading steps above to refresh the source list and
+top-level selection. Confirm that `rtl/top.sv` appears and `top` is the root module.
 
 ## `make` Workflows
 
@@ -66,17 +76,18 @@ hierarchy become available after RTL sources and `toplevel` are registered in
 .devcontainer/       Required toolchain and TerosHDL configuration
 .github/workflows/   Container-based CI
 .vscode/             Editor settings and extension recommendations
-rtl/                 Future Verilog/SystemVerilog sources
+rtl/                 Verilog/SystemVerilog sources
+  top.sv             Minimal GPU integration wrapper
   geometry_engine/   Geometry subsystem planning notes
   rasterizer/        Rasterizer planning notes
   vga_controller/    VGA controller planning notes
 scripts/             Python preprocessing overview and future LUT/mesh scripts
 tests/
-  cocotb/            Simulation runner and future hardware testbenches
+  cocotb/            Simulation runner and top-level smoke test
   tools/             Infrastructure and EDAM consistency tests
 tools/               Shared HDL discovery and quality workflows
 CONTRIBUTING.md      Repository contributor and review workflow
-edam.yml             TerosHDL source list and future top-level selection
+edam.yml             TerosHDL source list and top-level selection
 pyproject.toml       Python dependencies and tool configuration
 uv.lock              Locked Python environment
 Makefile             Local and CI workflows

@@ -1,4 +1,6 @@
 # Add every RTL source here; tests check this list against rtl/.
-# Set toplevel to the actual module name when the first RTL is added.
 name: tiny_fixed_function_gpu
-files: []
+toplevel: top
+files:
+  - name: rtl/top.sv
+    file_type: systemVerilogSource
