@@ -61,7 +61,7 @@ Once your changes are staged:
 git commit -m "Describe your change"
 ```
 
-## Open a pull request
+## Open and merge a pull request
 
 1. Push your work branch to the project repository:
 
@@ -74,9 +74,8 @@ git commit -m "Describe your change"
    Link the issue using `Refs #N` for partial work; use `Closes #N` only when the
    PR completes the issue's deliverable.
 3. Request review from `@cdi-sjsu/gpu-leads`. Every PR needs one eligible GPU lead's
-   approval, including code, documentation, infrastructure, and changes to
-   `.github/CODEOWNERS`. Regular members may review and give feedback, but their
-   approvals do not satisfy the code-owner requirement.
+   approval. Regular members may review and give feedback, but their
+   approvals do not satisfy the merging requirements.
 4. Address feedback and push follow-up commits to the same branch. Rerun checks
    after changes and resolve conversations once the feedback is addressed.
 5. If `main` has advanced, update your work branch and rerun checks:
@@ -87,8 +86,19 @@ git commit -m "Describe your change"
    ```
 
    Resolve any merge conflicts before committing and pushing the update.
-6. Once all merge requirements below are met, squash-merge the PR. Update the
-   linked issue and project board to reflect the work actually completed.
+6. Once all merge requirements below are met, open the PR on GitHub and confirm
+   that its target branch is `main`. Click **Squash and merge**, selecting it
+   from the merge dropdown if needed.
+7. Review the commit title and message, then click **Confirm squash and merge**.
+   GitHub creates one commit on `main` containing the PR's changes.
+8. Update the linked issue and project board to reflect the work.
+9. Save any uncommitted work by committing it on its work branch or stashing it
+   before switching branches. Update your local checkout:
+
+   ```sh
+   git switch main
+   git pull --ff-only origin main
+   ```
 
 ## Merge requirements
 
