@@ -24,7 +24,14 @@ class SimulationSuite:
 
 # Example once matching RTL and a Cocotb testbench exist:
 # SimulationSuite("geometry", "geometry_engine", "tb_geometry_engine")
-SUITES: tuple[SimulationSuite, ...] = ()
+SUITES: tuple[SimulationSuite, ...] = (
+    SimulationSuite(
+        "top",
+        "top_smoke",
+        "tb_top",
+        sources=("rtl/top.sv", "tests/cocotb/top_smoke.sv"),
+    ),
+)
 
 
 @pytest.mark.parametrize(
