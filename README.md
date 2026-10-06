@@ -9,12 +9,12 @@ FPGA with VGA output.
 
 [Fall 2026 Club Project Board](https://github.com/orgs/cdi-sjsu/projects/1)
 
-| Team | Responsibility | Lead | Source directory | Issue label | Current task |
-| --- | --- | --- | --- | --- | --- |
-| [GPU Rasterizer](https://github.com/orgs/cdi-sjsu/teams/gpu-rasterizer) | Triangle rasterization, depth, and color | [@Nativity8904](https://github.com/Nativity8904) | [rtl/rasterizer/](rtl/rasterizer/README.md) | Rasterizer Team | [#3: Algorithm comparison and recommendation](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/3) |
-| [GPU Geometry](https://github.com/orgs/cdi-sjsu/teams/gpu-geometry) | Vertex transforms and triangle interfaces | [@nicojeda189](https://github.com/nicojeda189) | [rtl/geometry_engine/](rtl/geometry_engine/README.md) | Geometry Team | [#4: Preliminary Geometry Engine interface](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/4) |
-| [GPU Python Preprocessing](https://github.com/orgs/cdi-sjsu/teams/gpu-python-preprocessing) | Preprocessing scripts and generated GPU data | To be decided | `scripts/` | Python Preprocessing Team | [#5: Sine LUT and FPGA initialization research](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/5) |
-| [GPU VGA](https://github.com/orgs/cdi-sjsu/teams/gpu-vga) | Framebuffer and VGA display output | To be decided | [rtl/vga_controller/](rtl/vga_controller/README.md) | VGA Team | [#6: Framebuffer and VGA Controller interface](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/6) |
+| Team | Responsibility | Members | Source directory | Issue label |
+| --- | --- | --- | --- | --- |
+| [GPU Rasterizer](https://github.com/orgs/cdi-sjsu/teams/gpu-rasterizer) | Triangle rasterization, depth, and color | [@Nativity8904](https://github.com/Nativity8904) **(lead)**<br>[@Forensic257](https://github.com/Forensic257)<br>[@Umar316798](https://github.com/Umar316798) | [rtl/rasterizer/](rtl/rasterizer/README.md) | Rasterizer Team |
+| [GPU Geometry](https://github.com/orgs/cdi-sjsu/teams/gpu-geometry) | Vertex transforms and triangle interfaces | [@nicojeda189](https://github.com/nicojeda189) **(lead)**<br>[@Moodlethenoodle](https://github.com/Moodlethenoodle) | [rtl/geometry_engine/](rtl/geometry_engine/README.md) | Geometry Team |
+| [GPU Python Preprocessing](https://github.com/orgs/cdi-sjsu/teams/gpu-python-preprocessing) | Preprocessing scripts and generated GPU data | Lead: To be decided<br>No members assigned | `scripts/` | Python Preprocessing Team |
+| [GPU VGA](https://github.com/orgs/cdi-sjsu/teams/gpu-vga) | Framebuffer and VGA display output | Lead: To be decided<br>[@DelosReyesJordan](https://github.com/DelosReyesJordan) | [rtl/vga_controller/](rtl/vga_controller/README.md) | VGA Team |
 
 ## Getting Started
 
@@ -26,8 +26,7 @@ FPGA with VGA output.
    - **Windows:** Install [WSL 2](https://learn.microsoft.com/windows/wsl/install) with Ubuntu.
      Install [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/)
      with its WSL 2 backend and enable integration for Ubuntu. Restart when prompted and complete Ubuntu's first-run setup.
-3. Clone the repository and open it in VS Code. For a WSL clone, run `code .` from Ubuntu
-   with the [WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) installed.
+3. Clone the repository and open it in VS Code.
 4. Select **Reopen in Container**, or run **Dev Containers: Reopen in Container** from
    the Command Palette (`Shift+Command+P` on macOS, `Ctrl+Shift+P` on Windows).
 5. Run `make` in the container terminal to see available commands.
@@ -46,19 +45,7 @@ The Dev Container includes TerosHDL and its dependencies. To load this project:
 6. In the **Sources** list, right-click `rtl/top.sv` and choose
    **Select source as toplevel**.
 
-The EDAM project registers `rtl/top.sv` and names module `top` as its root.
-This is a minimal shell with no ports or subsystem instances yet. Its Cocotb smoke
-test checks elaboration and simulation startup; GPU functionality will follow.
-
-TerosHDL 7.0.3 imports the `toplevel` field as a source path rather than a module
-name, so step 6 selects the root in TerosHDL. Keep `toplevel: top` in `edam.yml`
-because the command-line lint workflow expects a module name.
-
-If you previously loaded the empty project, remove its entry from TerosHDL's
-Projects list and repeat the loading steps above to refresh the source list and
-top-level selection. Confirm that `rtl/top.sv` appears and `top` is the root module.
-
-## `make` Workflows
+## `make` workflows
 
 | Command | Behavior |
 | --- | --- |
