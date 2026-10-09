@@ -9,12 +9,12 @@ FPGA with VGA output.
 
 [Fall 2026 Club Project Board](https://github.com/orgs/cdi-sjsu/projects/1)
 
-| Team | Responsibility | Members | Source directory | Issue label |
-| --- | --- | --- | --- | --- |
-| [GPU Rasterizer](https://github.com/orgs/cdi-sjsu/teams/gpu-rasterizer) | Triangle rasterization, depth, and color | [@Nativity8904](https://github.com/Nativity8904) **(lead)**<br>[@Forensic257](https://github.com/Forensic257)<br>[@Umar316798](https://github.com/Umar316798)<br>[@raylandho](https://github.com/raylandho)<br>[@wintlaekyaw](https://github.com/wintlaekyaw)<br>[@imnttoxicanymore](https://github.com/imnttoxicanymore) | [rtl/rasterizer/](rtl/rasterizer/README.md) | Rasterizer Team |
-| [GPU Geometry](https://github.com/orgs/cdi-sjsu/teams/gpu-geometry) | Vertex transforms and triangle interfaces | [@nicojeda189](https://github.com/nicojeda189) **(lead)**<br>[@Moodlethenoodle](https://github.com/Moodlethenoodle)<br>[@Sachin-Swami21](https://github.com/Sachin-Swami21)<br>[@imnttoxicanymore](https://github.com/imnttoxicanymore) | [rtl/geometry_engine/](rtl/geometry_engine/README.md) | Geometry Team |
-| [GPU Python Preprocessing](https://github.com/orgs/cdi-sjsu/teams/gpu-python-preprocessing) | Preprocessing scripts and generated GPU data | Lead: To be decided<br>No members assigned | `scripts/` | Python Preprocessing Team |
-| [GPU VGA](https://github.com/orgs/cdi-sjsu/teams/gpu-vga) | Framebuffer and VGA display output | Lead: To be decided<br>[@DelosReyesJordan](https://github.com/DelosReyesJordan) | [rtl/vga_controller/](rtl/vga_controller/README.md) | VGA Team |
+| Team | Responsibility | Lead | Members | Source directory | Issue label |
+| --- | --- | --- | --- | --- | --- |
+| [GPU Rasterizer](https://github.com/orgs/cdi-sjsu/teams/gpu-rasterizer) | Triangle rasterization, depth, and color | [@Nativity8904](https://github.com/Nativity8904) | [@Forensic257](https://github.com/Forensic257)<br>[@Umar316798](https://github.com/Umar316798)<br>[@raylandho](https://github.com/raylandho)<br>[@wintlaekyaw](https://github.com/wintlaekyaw)<br>[@imnttoxicanymore](https://github.com/imnttoxicanymore) | [rtl/rasterizer/](rtl/rasterizer/README.md) | Rasterizer Team |
+| [GPU Geometry](https://github.com/orgs/cdi-sjsu/teams/gpu-geometry) | Vertex transforms and triangle interfaces | [@nicojeda189](https://github.com/nicojeda189) | [@Moodlethenoodle](https://github.com/Moodlethenoodle)<br>[@Sachin-Swami21](https://github.com/Sachin-Swami21)<br>[@imnttoxicanymore](https://github.com/imnttoxicanymore) | [rtl/geometry_engine/](rtl/geometry_engine/README.md) | Geometry Team |
+| [GPU Python Preprocessing](https://github.com/orgs/cdi-sjsu/teams/gpu-python-preprocessing) | Preprocessing scripts and generated GPU data | To be decided | No members assigned | `scripts/` | Python Preprocessing Team |
+| [GPU VGA](https://github.com/orgs/cdi-sjsu/teams/gpu-vga) | Framebuffer and VGA display output | To be decided | [@DelosReyesJordan](https://github.com/DelosReyesJordan) | [rtl/vga_controller/](rtl/vga_controller/README.md) | VGA Team |
 
 ## Getting Started
 
