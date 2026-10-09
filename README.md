@@ -18,19 +18,30 @@ FPGA with VGA output.
 
 ## Getting Started
 
-1. Install [VS Code](https://code.visualstudio.com/) and its
-   [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
-2. Prepare Docker:
-   - **macOS:** Install [Docker Desktop](https://docs.docker.com/desktop/setup/install/mac-install/),
-     open it, and wait for the engine to start. Intel and Apple Silicon Macs are supported.
-   - **Windows:** Install [WSL 2](https://learn.microsoft.com/windows/wsl/install) with Ubuntu.
-     Install [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/)
-     with its WSL 2 backend and enable integration for Ubuntu. Restart when prompted and complete Ubuntu's first-run setup.
-3. Clone the repository and open it in VS Code.
-4. Select **Reopen in Container**, or run **Dev Containers: Reopen in Container** from
-   the Command Palette (`Shift+Command+P` on macOS, `Ctrl+Shift+P` on Windows).
-5. Run `make` in the container terminal to see available commands.
-6. Configure TerosHDL using the steps below.
+1. **Prepare Docker & Environment:**
+   - **Windows:**
+     1. Open PowerShell as Administrator and run:
+        ```powershell
+        wsl --install
+        ```
+        Restart your PC if prompted, then launch Ubuntu from the Start menu to set your username and password.
+     2. Install [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/). Ensure **Use the WSL 2 based engine** is checked during installation.
+     3. Open Docker Desktop, go to **Settings > Resources > WSL Integration**, turn on integration for **Ubuntu**, and select **Apply & restart**.
+   - **macOS:**
+     Install [Docker Desktop for Mac](https://docs.docker.com/desktop/setup/install/mac-install/), open it, and wait for the engine to start (both Intel and Apple Silicon Macs are supported).
+
+2. **Install VS Code & Extensions:**
+   - Install [VS Code](https://code.visualstudio.com/).
+   - Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (and the [WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) on Windows).
+
+3. **Clone and Open in Container:**
+   - Clone this repository (on Windows, cloning inside your Ubuntu WSL home directory is strongly recommended for native Linux file I/O performance and to avoid CRLF line-ending issues).
+   - Open the repository folder in VS Code.
+   - When prompted, select **Reopen in Container**, or open the Command Palette (`Ctrl+Shift+P` on Windows, `Cmd+Shift+P` on macOS) and run **Dev Containers: Reopen in Container**.
+
+4. **Verify & Configure:**
+   - Run `make` in the container terminal to list available workflows.
+   - Configure TerosHDL using the steps below.
 
 ### TerosHDL project
 
