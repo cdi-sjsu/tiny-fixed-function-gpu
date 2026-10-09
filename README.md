@@ -70,8 +70,12 @@ rtl/                 Verilog/SystemVerilog sources
   vga_controller/    VGA controller planning notes
 scripts/             Python preprocessing overview and future LUT/mesh scripts
 tests/
-  cocotb/            Simulation runner and top-level smoke test
+  common/            Shared simulation harness and runner utilities
+  geometry/          Geometry subsystem testbenches and simulation suites
+  rasterizer/        Rasterizer subsystem testbenches and simulation suites
   tools/             Infrastructure and EDAM consistency tests
+  top/               Top-level GPU wrapper and smoke tests
+  vga/               VGA controller and framebuffer simulation suites
 tools/               Shared HDL discovery and quality workflows
 CONTRIBUTING.md      Repository contributor and review workflow
 edam.yml             TerosHDL source list and top-level selection
