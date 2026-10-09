@@ -16,7 +16,7 @@ GEOMETRY_SUITES: tuple[SimulationSuite, ...] = ()
     ids=lambda suite: suite.name if suite else "no-geometry-rtl",
 )
 def test_geometry(suite: SimulationSuite | None) -> None:
-    source_dir = PROJECT_ROOT / "rtl/geometry_engine"
+    source_dir = PROJECT_ROOT / "rtl/geometry"
     if not source_dir.is_dir():
         pytest.skip("No geometry RTL exists yet; hardware simulation skipped.")
     sources = discover_sources(source_dir)
