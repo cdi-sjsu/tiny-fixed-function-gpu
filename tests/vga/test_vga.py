@@ -16,7 +16,7 @@ VGA_SUITES: tuple[SimulationSuite, ...] = ()
     ids=lambda suite: suite.name if suite else "no-vga-rtl",
 )
 def test_vga(suite: SimulationSuite | None) -> None:
-    source_dir = PROJECT_ROOT / "rtl/vga_controller"
+    source_dir = PROJECT_ROOT / "rtl/vga"
     if not source_dir.is_dir():
         pytest.skip("No VGA RTL exists yet; hardware simulation skipped.")
     sources = discover_sources(source_dir)

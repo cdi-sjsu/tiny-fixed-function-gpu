@@ -7,12 +7,12 @@
 /docs/meeting_notes/rasterization/ @Nativity8904
 
 # GPU Geometry Subsystem (Lead: @nicojeda189)
-/rtl/geometry_engine/ @nicojeda189
+/rtl/geometry/ @nicojeda189
 /tests/geometry/ @nicojeda189
 /docs/meeting_notes/geometry/ @nicojeda189
 
 # GPU VGA Subsystem (Team: @cdi-sjsu/gpu-vga)
-/rtl/vga_controller/ @cdi-sjsu/gpu-vga
+/rtl/vga/ @cdi-sjsu/gpu-vga
 /tests/vga/ @cdi-sjsu/gpu-vga
 /docs/meeting_notes/vga/ @cdi-sjsu/gpu-vga
 
