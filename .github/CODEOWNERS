@@ -1,1 +1,21 @@
+# Default owners for repository root and shared infrastructure
 * @cdi-sjsu/gpu-leads
+
+# GPU Rasterizer Subsystem (Lead: @Nativity8904)
+/rtl/rasterizer/ @Nativity8904
+/tests/rasterizer/ @Nativity8904
+/docs/meeting_notes/rasterization/ @Nativity8904
+
+# GPU Geometry Subsystem (Lead: @nicojeda189)
+/rtl/geometry_engine/ @nicojeda189
+/tests/geometry/ @nicojeda189
+/docs/meeting_notes/geometry/ @nicojeda189
+
+# GPU VGA Subsystem (Team: @cdi-sjsu/gpu-vga)
+/rtl/vga_controller/ @cdi-sjsu/gpu-vga
+/tests/vga/ @cdi-sjsu/gpu-vga
+/docs/meeting_notes/vga/ @cdi-sjsu/gpu-vga
+
+# GPU Python Preprocessing (Team: @cdi-sjsu/gpu-python-preprocessing)
+/scripts/ @cdi-sjsu/gpu-python-preprocessing
+/tests/scripts/ @cdi-sjsu/gpu-python-preprocessing

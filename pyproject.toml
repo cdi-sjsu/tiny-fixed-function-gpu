@@ -20,7 +20,7 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
-pythonpath = [".", "tests/cocotb"]
+pythonpath = [".", "tests", "tests/top", "tests/rasterizer", "tests/geometry", "tests/vga"]
 addopts = "-ra"
 
 [tool.ruff]

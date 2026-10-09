@@ -28,11 +28,13 @@ check: ## Check formatting, lint, project metadata, and tests
 	$(UV_RUN) python -m tools.hdl_workflow verify
 	SIM=$(SIM) $(PYTEST)
 
-test: ## Run registered Cocotb simulation suites
-	SIM=$(SIM) $(PYTEST) tests/cocotb/test_runner.py
+TARGET ?= tests
 
-waves: ## Run registered simulations with waveform output
-	WAVES=1 SIM=$(SIM) $(PYTEST) tests/cocotb/test_runner.py
+test: ## Run simulation suites (e.g. make test or make test TARGET=tests/rasterizer)
+	SIM=$(SIM) $(PYTEST) $(TARGET)
+
+waves: ## Run simulation suites with waveform output (e.g. make waves TARGET=tests/top)
+	WAVES=1 SIM=$(SIM) $(PYTEST) $(TARGET)
 
 ci: ## Validate the lockfile and run the complete quality gate
 	$(UV) lock --check
