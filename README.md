@@ -28,14 +28,14 @@ FPGA with VGA output.
      2. Install [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/). Ensure **Use the WSL 2 based engine** is checked during installation.
      3. Open Docker Desktop, go to **Settings > Resources > WSL Integration**, turn on integration for **Ubuntu**, and select **Apply & restart**.
    - **macOS:**
-     Install [Docker Desktop for Mac](https://docs.docker.com/desktop/setup/install/mac-install/), open it, and wait for the engine to start (both Intel and Apple Silicon Macs are supported).
+     Install [Docker Desktop for Mac](https://docs.docker.com/desktop/setup/install/mac-install/), open it, and wait for the engine to start.
 
 2. **Install VS Code & Extensions:**
    - Install [VS Code](https://code.visualstudio.com/).
    - Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (and the [WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) on Windows).
 
 3. **Clone and Open in Container:**
-   - Clone this repository (on Windows, cloning inside your Ubuntu WSL home directory is strongly recommended for native Linux file I/O performance and to avoid CRLF line-ending issues).
+   - Clone this repository.
    - Open the repository folder in VS Code.
    - When prompted, select **Reopen in Container**, or open the Command Palette (`Ctrl+Shift+P` on Windows, `Cmd+Shift+P` on macOS) and run **Dev Containers: Reopen in Container**.
 
