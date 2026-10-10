@@ -7,7 +7,17 @@ import pytest
 from tests.common.sim_runner import SimulationSuite, run_simulation
 from tools.hdl_sources import PROJECT_ROOT, discover_sources
 
-GEOMETRY_SUITES: tuple[SimulationSuite, ...] = ()
+GEOMETRY_SUITES: tuple[SimulationSuite, ...] = (
+    SimulationSuite(
+        name="dot_product",
+        top="dot_product",
+        test_module="tb_dot_product",
+        sources=(
+            "rtl/geometry/typedefs.sv",
+            "rtl/geometry/dot_product.sv",
+        ),
+    ),
+)
 
 
 @pytest.mark.parametrize(
