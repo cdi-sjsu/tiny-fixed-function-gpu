@@ -2,5 +2,9 @@
 name: tiny_fixed_function_gpu
 toplevel: top
 files:
+  - name: rtl/geometry/dot_product.sv
+    file_type: systemVerilogSource
+  - name: rtl/geometry/typedefs.sv
+    file_type: systemVerilogSource
   - name: rtl/top.sv
     file_type: systemVerilogSource
