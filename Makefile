@@ -9,34 +9,37 @@ UV_RUN ?= $(UV) run --frozen
 UV_SYNC ?= $(UV) sync --frozen
 PYTEST ?= $(UV_RUN) pytest
 
-.PHONY: help setup format check test waves ci
+.PHONY: help setup format check test tb waves ci
 
-help: ## List available workflows
-	@awk 'BEGIN { FS = ":.*## "; print "Available commands:" } /^[A-Za-z0-9_-]+:.*## / { printf "  make %-16s %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
+help: ## Show this help message
+	@awk 'BEGIN { FS = ":.*## "; print "Available commands:" } /^[A-Za-z0-9_-]+:.*## / { printf "  make %-10s %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
-setup: ## Install locked Python development dependencies
+setup: ## Install locked dependencies
 	$(UV_SYNC)
 
-format: ## Format Python and HDL sources
+format: ## Format Python and HDL code
 	$(UV_RUN) ruff format .
 	$(UV_RUN) python -m tools.hdl_workflow format
 
-check: ## Check formatting, lint, project metadata, and tests
+check: ## Run full lint, format check, and all tests
 	$(UV_RUN) ruff check .
 	$(UV_RUN) ruff format --check .
 	$(UV_RUN) python -m tools.hdl_workflow lint
 	$(UV_RUN) python -m tools.hdl_workflow verify
-	SIM=$(SIM) $(PYTEST)
+	SIM=$(SIM) $(PYTEST) tests tb
 
-TARGET ?= tests
+TARGET ?=
 
-test: ## Run simulation suites (e.g. make test or make test TARGET=tests/rasterizer)
-	SIM=$(SIM) $(PYTEST) $(TARGET)
+test: ## Run software and tooling tests
+	$(PYTEST) $(if $(TARGET),$(if $(filter tests/%,$(TARGET)),$(TARGET),tests/$(TARGET)),tests)
 
-waves: ## Run simulation suites with waveform output (e.g. make waves TARGET=tests/top)
-	WAVES=1 SIM=$(SIM) $(PYTEST) $(TARGET)
+tb: ## Run hardware simulation testbenches
+	SIM=$(SIM) $(PYTEST) $(if $(TARGET),$(if $(filter tb/%,$(TARGET)),$(TARGET),tb/$(TARGET)),tb)
 
-ci: ## Validate the lockfile and run the complete quality gate
+waves: ## Run testbenches and record VCD waveforms
+	WAVES=1 SIM=$(SIM) $(PYTEST) $(if $(TARGET),$(if $(filter tb/%,$(TARGET)),$(TARGET),tb/$(TARGET)),tb)
+
+ci: ## Run CI verification
 	$(UV) lock --check
 	$(MAKE) setup
 	$(MAKE) check

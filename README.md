@@ -60,13 +60,14 @@ The Dev Container includes TerosHDL and its dependencies. To load this project:
 
 | Command | Behavior |
 | --- | --- |
-| `make` | List available workflows. |
-| `make setup` | Install development dependencies from `uv.lock`. |
-| `make format` | Format Python with Ruff and RTL with Verible. |
-| `make check` | Check Python lint/format, Verilator lint, Verible format, project metadata, and all tests. |
-| `make test` | Run registered Cocotb simulation suites with Verilator. |
-| `make waves` | Run the suites and write VCD traces under `.sim_build/verilator/<suite>/`. |
-| `make ci` | Check lockfile consistency, install dependencies, and run the full quality check. |
+| `make` | Show help message. |
+| `make setup` | Install locked dependencies. |
+| `make format` | Format Python and HDL code. |
+| `make check` | Run full lint, format check, and all tests. |
+| `make test` | Run software and tooling tests (`tests/`). |
+| `make tb` | Run hardware simulation testbenches (`tb/`). |
+| `make waves` | Run testbenches and record VCD waveforms. |
+| `make ci` | Run CI verification. |
 
 ## Repository structure
 
@@ -80,13 +81,14 @@ rtl/                 Verilog/SystemVerilog sources
   rasterizer/        Rasterizer subsystem sources
   vga/               VGA subsystem sources
 scripts/             Python preprocessing overview and future LUT/mesh scripts
-tests/
+tb/                  Hardware verification and Cocotb simulation suites
   common/            Shared simulation harness and runner utilities
   geometry/          Geometry subsystem testbenches and simulation suites
   rasterizer/        Rasterizer subsystem testbenches and simulation suites
-  tools/             Infrastructure and EDAM consistency tests
   top/               Top-level GPU wrapper and smoke tests
   vga/               VGA controller and framebuffer simulation suites
+tests/               Repository, toolchain, and metadata consistency tests
+  tools/             EDAM and HDL discovery consistency tests
 tools/               Shared HDL discovery and quality workflows
 CONTRIBUTING.md      Repository contributor and review workflow
 edam.yml             TerosHDL source list and top-level selection
