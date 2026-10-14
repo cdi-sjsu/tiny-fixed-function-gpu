@@ -61,13 +61,19 @@ The Dev Container includes TerosHDL and its dependencies. To load this project:
 | Command | Behavior |
 | --- | --- |
 | `make` | Show help message. |
-| `make setup` | Install locked dependencies. |
+| `make edam` | Refresh the TerosHDL source list from `rtl/`. |
 | `make format` | Format Python and HDL code. |
 | `make check` | Run full lint, format check, and all tests. |
 | `make test` | Run software and tooling tests (`tests/`). |
 | `make tb` | Run hardware simulation testbenches (`tb/`). |
 | `make waves` | Run testbenches and record VCD waveforms. |
-| `make ci` | Run CI verification. |
+
+The Dev Container installs dependencies automatically. The `edam.yml` source list
+regenerates during container setup and before formatting, checking, or running
+tests and simulations. After adding, removing, or renaming RTL files, use
+`make edam` to refresh it immediately before reloading the TerosHDL project.
+Project metadata such as the project name and selected top module remains configured
+in `edam.yml`; only the source list is generated.
 
 ## Repository structure
 
