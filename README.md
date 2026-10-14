@@ -77,6 +77,7 @@ The Dev Container includes TerosHDL and its dependencies. To load this project:
 .vscode/             Editor settings and extension recommendations
 rtl/                 Verilog/SystemVerilog sources
   top.sv             Minimal GPU integration wrapper
+  pkg/               Shared GPU packages, structs, and vector typedefs
   geometry/          Geometry subsystem sources
   rasterizer/        Rasterizer subsystem sources
   vga/               VGA subsystem sources
