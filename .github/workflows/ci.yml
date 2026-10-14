@@ -16,8 +16,18 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build the development image
-        run: docker build --tag tiny-fixed-function-gpu-dev --file .devcontainer/Dockerfile .
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: .devcontainer/Dockerfile
+          tags: tiny-fixed-function-gpu-dev
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Run quality checks in the development image
         run: >-
@@ -26,3 +36,11 @@ jobs:
           --workdir /workspace
           tiny-fixed-function-gpu-dev
           bash -lc 'make ci'
+
+      - name: Upload simulation traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulation-artifacts
+          path: .sim_build/
+          retention-days: 7

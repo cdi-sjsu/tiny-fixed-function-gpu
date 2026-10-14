@@ -12,10 +12,7 @@ GEOMETRY_SUITES: tuple[SimulationSuite, ...] = (
         name="dot_product",
         top="dot_product",
         test_module="tb_dot_product",
-        sources=(
-            "rtl/geometry/typedefs.sv",
-            "rtl/geometry/dot_product.sv",
-        ),
+        sources=("rtl/geometry/dot_product.sv",),
     ),
 )
 

@@ -14,7 +14,7 @@
     }
   },
   "teroshdl.formatter.verilog.formatter": "Verible",
-  "teroshdl.linter.verilog.linter": "Verilator",
+  "teroshdl.linter.verilog.linter": "Verible",
   "teroshdl.tools.verible.path": "/usr/local/bin",
   "teroshdl.tools.verilator.path": "/usr/local/bin",
   "systemverilog.includeIndexing": [
