@@ -3,6 +3,7 @@
 
 # Shared RTL and verification infrastructure
 /rtl/pkg/ @cdi-sjsu/gpu-leads
+/rtl/common/ @cdi-sjsu/gpu-leads
 /tb/common/ @cdi-sjsu/gpu-leads
 /tb/top/ @cdi-sjsu/gpu-leads
 
