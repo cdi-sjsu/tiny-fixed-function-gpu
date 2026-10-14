@@ -8,7 +8,7 @@ This guide explains how to implement hardware testbenches using Cocotb and Veril
 
 * **`rtl/`**: Synthesizable Verilog and SystemVerilog code only.
 * **`tb/`**: Hardware verification testbenches and Cocotb test logic.
-* **`tests/`**: Tests for repository tooling and metadata consistency.
+* **`tests/`**: Tests for other components. Don't touch this.
 
 ---
 
@@ -49,7 +49,7 @@ Add your `SimulationSuite` to the subsystem tuple:
         name="foo",
         top="foo",
         test_module="tb_foo",
-        sources=("rtl/<subsystem>/foo.sv",),
+        sources=("<subsystem>/foo.sv",),
     ),
 )
 ```
@@ -80,18 +80,3 @@ The waveform trace will be generated at:
 ```text
 .sim_build/verilator/<suite_name>/dump.vcd
 ```
-
-## Shared GPU Types
-
-Import `gpu_pkg` for synthesizable types. The simulation runner prepends files
-from `rtl/pkg/` before suite sources and removes duplicate paths. Set
-`auto_packages=False` only for suites that intentionally manage package sources.
-List verification-only packages such as `tb/common/test_pkg.sv` explicitly before
-the modules that use them.
-
-`xyzw_vector_t` contains signed 32-bit `x` and `y`, unsigned 32-bit `z`, and
-one-bit `w`. Depth can be zero; a high-bit `z` compares as a positive unsigned
-value. `transformation_matrix_t` uses packed `[3:0][3:0][31:0]` dimensions.
-The first row of an assignment pattern is row 3, and its first element is
-column 3. Thus the existing translation fixture places its translation terms
-at `[3][0]`, `[2][0]`, and `[1][0]`. Consumers must use this ordering.

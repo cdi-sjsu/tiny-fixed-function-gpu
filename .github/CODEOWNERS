@@ -1,11 +1,8 @@
 # Default owners for repository root and shared infrastructure
 * @cdi-sjsu/gpu-leads
 
-# Shared RTL and verification infrastructure
-/rtl/pkg/ @cdi-sjsu/gpu-leads
+# Shared RTL and Verification Infrastructure
 /rtl/common/ @cdi-sjsu/gpu-leads
-/tb/common/ @cdi-sjsu/gpu-leads
-/tb/top/ @cdi-sjsu/gpu-leads
 
 # GPU Rasterizer Subsystem (Lead: @Nativity8904)
 /rtl/rasterizer/ @Nativity8904

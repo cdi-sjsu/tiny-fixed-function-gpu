@@ -9,7 +9,7 @@ module sync_fifo #(
     parameter int DATA_WIDTH = 32
 ) ();
 
-    // Queue ports, storage, and control logic are pending interface decisions.
+    // Sean change the stuff here
 
 endmodule
 
