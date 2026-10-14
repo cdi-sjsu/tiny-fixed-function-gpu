@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from tests.common.sim_runner import SimulationSuite, run_simulation
+from tb.common.sim_runner import SimulationSuite, run_simulation
 from tools.hdl_sources import PROJECT_ROOT, discover_sources
 
 RASTERIZER_SUITES: tuple[SimulationSuite, ...] = ()
@@ -23,7 +23,5 @@ def test_rasterizer(suite: SimulationSuite | None) -> None:
     if not sources:
         pytest.skip("No rasterizer RTL exists yet; hardware simulation skipped.")
     if suite is None:
-        pytest.fail(
-            "Rasterizer RTL exists: register a suite in tests/rasterizer/test_rasterizer.py."
-        )
+        pytest.fail("Rasterizer RTL exists: register a suite in tb/rasterizer/test_rasterizer.py.")
     run_simulation(suite, sources=sources)

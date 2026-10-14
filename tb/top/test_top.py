@@ -2,14 +2,14 @@
 
 import pytest
 
-from tests.common.sim_runner import SimulationSuite, run_simulation
+from tb.common.sim_runner import SimulationSuite, run_simulation
 from tools.hdl_sources import PROJECT_ROOT, discover_sources
 
 TOP_SUITE = SimulationSuite(
     name="top",
     top="top_smoke",
     test_module="tb_top",
-    sources=("rtl/top.sv", "tests/top/top_smoke.sv"),
+    sources=("rtl/top.sv", "tb/top/top_smoke.sv"),
 )
 
 

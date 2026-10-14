@@ -18,9 +18,9 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "tb"]
 python_files = ["test_*.py"]
-pythonpath = [".", "tests", "tests/top", "tests/rasterizer", "tests/geometry", "tests/vga"]
+pythonpath = [".", "tb", "tb/top", "tb/rasterizer", "tb/geometry", "tb/vga", "tests"]
 addopts = "-ra"
 
 [tool.ruff]

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from tests.common.sim_runner import SimulationSuite, run_simulation
+from tb.common.sim_runner import SimulationSuite, run_simulation
 from tools.hdl_sources import PROJECT_ROOT, discover_sources
 
 VGA_SUITES: tuple[SimulationSuite, ...] = ()
@@ -23,5 +23,5 @@ def test_vga(suite: SimulationSuite | None) -> None:
     if not sources:
         pytest.skip("No VGA RTL exists yet; hardware simulation skipped.")
     if suite is None:
-        pytest.fail("VGA RTL exists: register a suite in tests/vga/test_vga.py.")
+        pytest.fail("VGA RTL exists: register a suite in tb/vga/test_vga.py.")
     run_simulation(suite, sources=sources)
