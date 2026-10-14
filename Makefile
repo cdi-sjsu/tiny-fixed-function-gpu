@@ -9,13 +9,19 @@ UV_RUN ?= $(UV) run --frozen
 UV_SYNC ?= $(UV) sync --frozen
 PYTEST ?= $(UV_RUN) pytest
 
-.PHONY: help setup format check test tb waves ci
+.PHONY: help setup edam format check test tb waves ci
 
 help: ## Show this help message
 	@awk 'BEGIN { FS = ":.*## "; print "Available commands:" } /^[A-Za-z0-9_-]+:.*## / { printf "  make %-10s %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
-setup: ## Install locked dependencies
+setup:
 	$(UV_SYNC)
+	$(MAKE) edam
+
+edam: ## Refresh the RTL project source list
+	$(UV_RUN) python -m tools.generate_edam
+
+format check test tb waves: edam
 
 format: ## Format Python and HDL code
 	$(UV_RUN) ruff format .
@@ -39,7 +45,7 @@ tb: ## Run hardware simulation testbenches
 waves: ## Run testbenches and record VCD waveforms
 	WAVES=1 SIM=$(SIM) $(PYTEST) $(if $(TARGET),$(if $(filter tb/%,$(TARGET)),$(TARGET),tb/$(TARGET)),tb)
 
-ci: ## Run CI verification
+ci:
 	$(UV) lock --check
 	$(MAKE) setup
 	$(MAKE) check
