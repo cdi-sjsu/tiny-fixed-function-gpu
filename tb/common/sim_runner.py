@@ -49,6 +49,12 @@ def run_simulation(
     else:
         resolved_sources = []
 
+    env = dict(os.environ)
+    python_paths = [str(PROJECT_ROOT), str(PROJECT_ROOT / "tb")]
+    if "PYTHONPATH" in env:
+        python_paths.append(env["PYTHONPATH"])
+    env["PYTHONPATH"] = os.pathsep.join(python_paths)
+
     runner.build(
         sources=resolved_sources,
         hdl_toplevel=suite.top,
@@ -65,4 +71,5 @@ def run_simulation(
         test_dir=build_dir,
         build_dir=build_dir,
         waves=record_waves,
+        extra_env=env,
     )
