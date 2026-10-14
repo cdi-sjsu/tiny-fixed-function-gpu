@@ -7,7 +7,14 @@ import pytest
 from tb.common.sim_runner import SimulationSuite, run_simulation
 from tools.hdl_sources import PROJECT_ROOT, discover_sources
 
-RASTERIZER_SUITES: tuple[SimulationSuite, ...] = ()
+RASTERIZER_SUITES: tuple[SimulationSuite, ...] = (
+    SimulationSuite(
+        name="rasterizer_top",
+        top="rasterizer_top",
+        test_module="tb_rasterizer",
+        sources=("rtl/rasterizer/rasterizer_top.sv",),
+    ),
+)
 
 
 @pytest.mark.parametrize(

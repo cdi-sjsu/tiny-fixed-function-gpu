@@ -79,7 +79,7 @@
     "linter": {
         "general": {
             "linter_vhdl": "disabled",
-            "linter_verilog": "verilator",
+            "linter_verilog": "verible",
             "lstyle_verilog": "disabled",
             "lstyle_vhdl": "disabled"
         },

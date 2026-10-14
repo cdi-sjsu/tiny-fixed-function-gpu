@@ -2,7 +2,11 @@
 * @cdi-sjsu/gpu-leads
 
 # Shared RTL and Verification Infrastructure
+/rtl/pkg/ @cdi-sjsu/gpu-leads
 /rtl/common/ @cdi-sjsu/gpu-leads
+/constraints/ @cdi-sjsu/gpu-leads
+/tb/common/ @cdi-sjsu/gpu-leads
+/tb/top/ @cdi-sjsu/gpu-leads
 
 # GPU Rasterizer Subsystem (Lead: @Nativity8904)
 /rtl/rasterizer/ @Nativity8904
