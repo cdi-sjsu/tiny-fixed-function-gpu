@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 from cocotb_tools.runner import get_runner
 
-from tools.hdl_sources import PROJECT_ROOT, HdlSource, discover_sources
+from tools.hdl_sources import PROJECT_ROOT, HdlSource
 
 
 @dataclass(frozen=True)
@@ -19,36 +19,9 @@ class SimulationSuite:
     name: str
     top: str
     test_module: str
-    # Paths relative to the repository root; empty compiles discovered subsystem sources.
+    # Paths relative to the repository root; empty compiles discovered RTL sources.
     sources: tuple[str, ...] = ()
     parameters: dict[str, int] = field(default_factory=dict)
-    auto_packages: bool = True
-
-
-def _resolve_sources(
-    suite_sources: tuple[str, ...],
-    discovered_sources: Sequence[HdlSource | Path] | None,
-    include_packages: bool = True,
-) -> list[Path]:
-    """Resolve and order HDL sources, prepending shared packages automatically."""
-    packages: list[Path] = []
-    if include_packages:
-        pkg_dir = PROJECT_ROOT / "rtl/pkg"
-        if pkg_dir.is_dir():
-            packages = [s.path for s in discover_sources(pkg_dir)]
-
-    raw_sources: list[Path] = []
-    if suite_sources:
-        raw_sources = [PROJECT_ROOT / path for path in suite_sources]
-    elif discovered_sources is not None:
-        raw_sources = [s.path if isinstance(s, HdlSource) else s for s in discovered_sources]
-
-    ordered: list[Path] = []
-    for path in packages + raw_sources:
-        resolved = path.resolve()
-        if resolved not in ordered:
-            ordered.append(resolved)
-    return ordered
 
 
 def run_simulation(
@@ -69,15 +42,15 @@ def run_simulation(
     if sim == "verilator" and "OBJCACHE" not in os.environ and shutil.which("ccache") is None:
         os.environ["OBJCACHE"] = ""
 
-    resolved_sources = _resolve_sources(
-        suite.sources, sources, include_packages=suite.auto_packages
-    )
+    if suite.sources:
+        resolved_sources = [PROJECT_ROOT / path for path in suite.sources]
+    elif sources is not None:
+        resolved_sources = [s.path if isinstance(s, HdlSource) else s for s in sources]
+    else:
+        resolved_sources = []
 
     env = dict(os.environ)
-    python_paths = [
-        str(PROJECT_ROOT),
-        str(PROJECT_ROOT / "tb"),
-    ]
+    python_paths = [str(PROJECT_ROOT), str(PROJECT_ROOT / "tb")]
     if "PYTHONPATH" in env:
         python_paths.append(env["PYTHONPATH"])
     env["PYTHONPATH"] = os.pathsep.join(python_paths)
