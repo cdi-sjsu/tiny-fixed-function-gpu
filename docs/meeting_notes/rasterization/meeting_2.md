@@ -1,9 +1,10 @@
 # Rasterization Group Meeting 2
 
-**Date & Time:** 2026-10-13 | 11:30 – 13:00 (PST)  
+**Date & Time:** 2026-10-13 | 11:30 – 13:00 (PDT)<br>
 **Location / Link:** ENGR 370
 **Facilitator:** Kyle Ringor
 **Note Taker:** Kyle Ringor
+**Meeting Status:** Completed on October 13, 2026.
 
 ---
 
@@ -86,7 +87,13 @@
 ---
 
 ### Key Decisions Made
-* Pending team discussion.
+
+* Sean will research triangle queues and how to connect the Geometry and
+  Rasterizer interfaces.
+* Wint will research the Z-buffer and how it integrates with Pineda rasterization.
+* Rayland will write a Python pseudocode version of Pineda.
+* All three follow-ups are due October 20, 2026. Technical choices in the discussion
+  sections remain open unless explicitly agreed and recorded.
 
 ---
 
@@ -94,14 +101,17 @@
 
 | Task | Owner | Due Date | Status |
 | :--- | :--- | :--- | :--- |
-| Document algorithm choice and coordinate/coverage conventions | TBD | TBD | Proposed |
-| Agree on geometry and framebuffer interface tables with the other teams | TBD | TBD | Proposed |
-| Draft rasterization pseudocode and verification cases | TBD | TBD | Proposed |
+| [Research triangle queues and Geometry–Rasterizer interfaces (#24)](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/24) | Sean — @imnttoxicanymore | 2026-10-20 | Assigned |
+| [Research Z-buffer integration with Pineda (#25)](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/25) | Wint — @wintlaekyaw | 2026-10-20 | Assigned |
+| [Write Pineda pseudocode in Python (#26)](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/26) | Rayland — @raylandho | 2026-10-20 | Assigned |
 
 ---
 
 ### Next Steps & Follow-Up
-* **Next Meeting:** YYYY-MM-DD at 00:00
+* **Next Meeting:** 2026-10-20 | 11:30 – 13:00 (PDT)
+* Review the three follow-up deliverables after their October 20 deadline; track
+  the broader design work in issue #19.
 * **Artifacts / Links:**
+  * [Meeting 2 tracker — October 13: issue #23](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/23)
   * [Meeting 1: Rasterization options](meeting_1.md)
   * [Rasterization algorithms, interfaces, and pseudocode: issue #19](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/19)
