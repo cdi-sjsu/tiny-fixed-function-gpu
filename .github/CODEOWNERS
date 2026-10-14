@@ -18,4 +18,4 @@
 
 # GPU Python Preprocessing (Team: @cdi-sjsu/gpu-python-preprocessing)
 /scripts/ @cdi-sjsu/gpu-python-preprocessing
-/tb/scripts/ @cdi-sjsu/gpu-python-preprocessing
+/tests/scripts/ @cdi-sjsu/gpu-python-preprocessing
