@@ -49,15 +49,8 @@ THe pipeline diagram:
 
 
 - Dot-product architecture:
-    - for example
-| Clock 1: multipliers work on A  |                         |                        |   |
-|---------------------------------|-------------------------|------------------------|---|
-|  Clock 2: multipliers work on B |  first adders work on A |                        |   |
-| Clock 3: multipliers work on C  | first adders work on B  | final adder works on A |   |
-    - Or you have two have these ALU models and it would be 2x faster working this way so one works on A B other works on C
-    - and if we really wanted since we want to maximize time, four of these could work, FYI A B C is each vertice but the ALU were making or GAU
-    - the GAU is only doing one row at a time, so we could do one GAU does 4 repeats on A efficiently
-    - or we do multiple GAUs like 3 GAUs that have a dedicated vertex. i like this one we just need to make one for now
+      - We will make 3 separate GAUs to work on (row by row) Vector A B & C
+ 
 - Pipeline stages: That is for above really. we also get to talk about
     - How we are going to store the Matrices that can transform themselves.
     - Option 1 i can think of: Completely hardwired constants - it makes it good if it never changes like identity matrix
@@ -70,31 +63,28 @@ THe pipeline diagram:
         matrix_reg[0][3] <=  Q16_ZERO;
       -Option 3 theres a middle ground of having registers set up with inputs and then for now we explicitly define them for things like translation etc
 
-    THen why even talk about the "three options?" -- its to show we need to mix and match and not choose one for this as the identity matrix will be fine as a hardcoded Zero and One variable
+    THen why even talk about the "two options?" -- its to show we need to mix and match and not choose one for this as the identity matrix will be fine as a hardcoded Zero and One variable
   however for other matrices we probably want to think about the future and what we can do to prepare for it. we want CPU control so lets make it so a CPU could control it if you turned your head and squinted.
   
 - Triangle processing order:
-    - we want a full triangle to be ready to go
-    - we need to decide the thing above do we want A complete then go onto B then go onto C once B is complete. or do we want A and while is being complete then B and so on, or what could we do?
-          - Two/four GAUs? speed up our process more?
-- Fixed-point behavior:
-    - i should probably write a document on how to do fixed-point behavoir
+    - we want a full triangle to be ready to go in 3 parralel GAUs.
+   
 - Other decisions:
 
 **who is getting what for these action items:**
 
-Initial Geometry Arithmetic Unit implementation
-Python Q16.16 sine/cosine LUT generator
-Clipping algorithm and interface research
-Material/color pass-through proposal for rasterization
+Initial Geometry Arithmetic Unit implementation -- Verilog Heavy
+Python Q16.16 sine/cosine LUT generator -- Python heavy
+Clipping algorithm and interface research -- Research Heavy
+Material/color pass-through proposal for rasterization -- Research heavy thing
 
 ## Action Items
 nic must make action item in github project
 | Owner | Deliverable | Due Date | Status |
-| Nic | :--- | :--- | :--- |
-| Preston | :--- | :--- | :--- |
-| Sean | :--- | :--- | :--- |
-| Sachin | :--- | :--- | :--- |
+| Nic | Work on VGA team  | Infinity | Never |
+| Preston | GAU | 10/30/26 | :--- |
+| Sean | SIN LUT | 10/23 | :--- |
+| Sachin | Researcher | 10/23 | Started |
 
 ### Next Steps & Follow-Up
 * **Next Meeting:** 2026-10-23 | 11:30 – 1:00
