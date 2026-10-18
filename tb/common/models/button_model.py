@@ -4,28 +4,45 @@ class ButtonModel:
     def __init__(self, *, STABLE_COUNT: int, BUTTON_MODE: int):
         self.STABLE_COUNT = STABLE_COUNT
         self.BUTTON_MODE = BUTTON_MODE
-        self.prev_btn_o = 0
         self.sync_counter = [0, 0]
+        self.debounced_state = 0
+        self.prev_debounced_state = 0
         self.stable_counter = 0
+        self.btn_o = 0
 
     def step(self, *, rst_n, btn_i) -> int:
-        """NOT FINISED"""
-        if rst_n:
-            self.prev_btn_o = 0
+        """Cycle by cycle intended behavior for button returning btn_o"""
+        if not rst_n:
             self.sync_counter = [0, 0]
+            self.debounced_state = 0
+            self.prev_debounced_state = 0
             self.stable_counter = 0
-            return 0
+            self.btn_o = 0
+            return self.btn_o
 
-        # Idk how else to implement this rn
-        self.sync_counter[0] = btn_i
-        self.sync_counter[1] = self.sync_counter[0]
+        self.sync_counter[1], self.sync_counter[0] = self.sync_counter[0], btn_i
 
-        if self.prev_btn_o != self.sync_counter[1]:
-            self.stable_counter = (self.stable_counter + 1) % (self.STABLE_COUNT - 1)
+        self.prev_debounced_state = self.debounced_state
+
+        # Start counter whenever the 2-phase sync and debounced_state are different
+        if self.debounced_state != self.sync_counter[1]:
+            self.stable_counter += 1
+            if self.stable_counter >= self.STABLE_COUNT:
+                self.debounced_state = self.sync_counter[1]
+                self.stable_counter = 0
         else:
             self.stable_counter = 0
 
         if self.BUTTON_MODE == 0:  # Pulse mode
-            return 0
+            self.btn_o = self.btn_o = int(
+                self.debounced_state == 1 and self.prev_debounced_state == 0
+            )
         elif self.BUTTON_MODE == 1:  # Sustained mode
-            return 0
+            self.btn_o = int(self.debounced_state)
+        else:
+            raise ValueError("BUTTON_MODE must have a value [0, 1]")
+
+        return self.btn_o
+
+    def get_btn_o(self) -> int:
+        return self.btn_o

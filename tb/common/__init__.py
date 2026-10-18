@@ -1,1 +1,1 @@
-"""Shared test utilities and fixtures."""
+"""Testbenches for shared hardware utility modules."""
