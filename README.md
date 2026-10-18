@@ -91,14 +91,14 @@ rtl/                 Synthesizable Verilog/SystemVerilog sources
   vga/               VGA subsystem sources
 scripts/             Python preprocessing overview and future LUT/mesh scripts
 tb/                  Hardware verification and Cocotb simulation suites
-  common/            Shared simulation harness and runner utilities
+  common/            Testbenches for shared hardware utility modules
   geometry/          Geometry subsystem testbenches and simulation suites
   rasterizer/        Rasterizer subsystem testbenches and simulation suites
   top/               Top-level GPU wrapper and smoke tests
   vga/               VGA controller and framebuffer simulation suites
 tests/               Repository, toolchain, and metadata consistency tests
   tools/             EDAM and HDL discovery consistency tests
-tools/               Shared HDL discovery and quality workflows
+tools/               Shared simulation runner, HDL discovery, and quality workflows
 CONTRIBUTING.md      Repository contributor and review workflow
 edam.yml             TerosHDL source list and top-level selection
 pyproject.toml       Python dependencies and tool configuration

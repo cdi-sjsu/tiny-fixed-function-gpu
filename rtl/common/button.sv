@@ -6,7 +6,7 @@
 //!
 //! Customizable button debouncer supporting pulse and sustained outputs.
 module button #(
-    parameter bit BUTTON_MODE = "PULSE",  //! "PULSE" or "SUSTAINED"
+    parameter int unsigned BUTTON_MODE  = 0,    //! PULSE = 0, SUSTAINED = 1
     parameter int unsigned STABLE_COUNT = 1000  //! Clock cycles required for stability
 ) (
     input  wire  clk,
@@ -35,7 +35,7 @@ module button #(
 
             // Counter needs to fill for both debounced_state hi and lo
             if (sync[1] != debounced_state) begin
-                if (count == (STABLE_COUNT - 1)) begin
+                if (count == (COUNT_WIDTH'(STABLE_COUNT) - 1)) begin
                     debounced_state <= sync[1];
                     count           <= '0;
                 end else begin
@@ -49,20 +49,20 @@ module button #(
 
     generate
         case (BUTTON_MODE)
-            "PULSE": begin : gen_pulse
+            0: begin : gen_pulse
                 // Produces a 1-cycle pulse
                 always_ff @(posedge clk or negedge rst_n) begin : pulse_proc
                     if (!rst_n) begin
                         btn_o <= 1'b0;
                     end else begin
                         btn_o <= (sync[1] != debounced_state) && // Necessary for STABLE_COUNT = 1 edge-case
-                        (count == STABLE_COUNT - 1) &&  // Only triggers for 1 clk cycle
+                        (count == COUNT_WIDTH'(STABLE_COUNT) - 1) &&  // Only triggers for 1 clk cycle
                         (sync[1] == 1'b1);  // Only triggers on hi
                     end
                 end : pulse_proc
             end
 
-            "SUSTAINED": begin : gen_sustained
+            1: begin : gen_sustained
                 // Mirrors the debounced state
                 always_comb begin : sustained_proc
                     btn_o = debounced_state;
@@ -71,11 +71,9 @@ module button #(
 
             default:
             begin : gen_invalid
-`ifndef SYNTHESIS
                 initial begin
                     $error("Unsupported BUTTON_MODE parameter specified in module %m.");
                 end
-`endif
             end
         endcase
     endgenerate
