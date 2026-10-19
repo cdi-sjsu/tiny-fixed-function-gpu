@@ -6,7 +6,19 @@ from cocotb.clock import Clock
 from cocotb.triggers import ReadOnly, RisingEdge
 
 from tb.common.models.button_model import ButtonModel
+from tb.helpers.functions.reset import reset
 from tools.sim_runner import SimulationSuite, run_simulation
+
+
+async def _check_hold_state(dut, *, model: ButtonModel, level: int) -> tuple[int, int]:
+    model.step(rst_n=0, btn_i=level)
+    expected = model.get_btn_o()
+
+    await RisingEdge(dut.clk)
+    ReadOnly()
+    actual = int(dut.btn_o.value)
+
+    return expected, actual
 
 
 @cocotb.test()
@@ -27,51 +39,27 @@ async def check_behavior(dut):
     model.step(rst_n=1, btn_i=1)
     expected = model.get_btn_o()
 
-    dut.rst_n.value = 1
-    await RisingEdge(dut.clk)
-    ReadOnly()
+    await reset(dut)
     actual = int(dut.btn_o.value)
 
-    assert expected == actual, "Failed: Check reset, Expected: {expected}, Actual: {actual}"
+    assert expected == actual
+
+    dut.rst_n.value = 0
 
     # Check debounce
-    dut.rst_n.value = 0
-    dut.btn_i.value = 1
-
     for _ in range(STABLE_COUNT):
-        model.step(rst_n=0, btn_i=1)
-        expected = model.get_btn_o()
-
-        await RisingEdge(dut.clk)
-        ReadOnly()
-        actual = int(dut.btn_o.value)
-
-        assert expected == actual, "Check debounce, Expected: {expected}, Actual: {actual}"
+        expected, actual = await _check_hold_state(dut, model=model, level=1)
+        assert expected == actual
 
     # Check hold
-    dut.btn_i.value = 1
-
     for _ in range(random.randrange(1, STABLE_COUNT * 2)):
-        model.step(rst_n=0, btn_i=1)
-        expected = model.get_btn_o()
-
-        await RisingEdge(dut.clk)
-        ReadOnly()
-        actual = int(dut.btn_o.value)
-
-        assert expected == actual, "Check hold, Expected: {expected}, Actual: {actual}"
+        expected, actual = await _check_hold_state(dut, model=model, level=1)
+        assert expected == actual
 
     # Check release
-    dut.btn_i.value = 1
     for _ in range(random.randrange(1, STABLE_COUNT * 2)):
-        model.step(rst_n=0, btn_i=0)
-        expected = model.get_btn_o()
-
-        await RisingEdge(dut.clk)
-        ReadOnly()
-        actual = int(dut.btn_o.value)
-
-        assert expected == actual, "Check hold, Expected: {expected}, Actual: {actual}"
+        expected, actual = await _check_hold_state(dut, model=model, level=0)
+        assert expected == actual
 
 
 @pytest.mark.parametrize("stable_count", [1, 4, 100])
