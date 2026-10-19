@@ -1,0 +1,42 @@
+Pineda Formula
+- E x P = (x1 - x0)(y - y0) - (y1 - y0)(x - x0)
+- This is a signed edge function. Its sign tells which side of the edge the point is on.
+- Its magnitude is proportional to the distance from the edge, but it is not the actual distance.
+- The actual signed distance is edge_function / edge_length.
+- THIS IS A DIFFERENT VERSION OF THE FORMULA. The original is:
+  (x - x0)(y1 - y0) - (y - y0)(x1 - x0)
+- The original formula is P x E, which is the negative of E x P. Therefore, its positive/negative side interpretation is reversed.
+- Derivation
+    - Let the starting vertex be V0 = (x0, y0) and ending vertex be V1 = (x1, y1). The test point is (x, y).
+    - Edge vector: E = <x1 - x0, y1 - y0>
+    - Point vector: P = <x - x0, y - y0> (vector from V0 to P)
+    - E x P = (x1 - x0)(y - y0) - (y1 - y0)(x - x0)
+    - If the vertices are ordered CCW, the inside of the triangle is always to the left of the three edges.
+    - By crossing Edge and Point, we get an imaginary z component pointing up or down, orthogonal to the vectors. If this value is positive, the test point is to the left of the edge vector; if it is negative, the point is to the right.
+    - To visualize this, use the right-hand rule. If the edge vector points right, a point to its left has positive Y. Crossing them yields positive Z.
+    - These sign descriptions assume a standard coordinate system with Y increasing upward and CCW vertex order.
+
+Shared Edge: Top-Left Rule
+- Look at the direction of the edge moving from v0 to v1.
+- Set dx = x1 - x0 and dy = y1 - y0.
+- If dy < 0, the edge is considered a left edge. This assumes CCW vertices and Y increasing upward.
+- If dy == 0, the edge is either the top or bottom boundary. Due to CCW ordering, the top edge moves right to left, so dx < 0.
+- If either condition is true, the edge passes the top-left rule.
+- A pixel exactly on a top-left edge is included. A pixel exactly on any other edge is excluded so shared edges do not draw pixels twice.
+
+Checking for a Degenerate Triangle
+- area = edge_function(A, B, C)
+- This is the signed twice-area of the triangle.
+- If area == 0, the triangle is flat and is skipped.
+- For CCW vertices, area should be positive.
+
+Edge Initialization and Top-Left Testing
+- Accept an edge when its value is positive, or when its value is exactly zero and the edge passes the top-left rule:
+  accepts_edge(value, top_left) = value > 0 or (value == 0 and top_left)
+
+Weights
+- The edge-function values are not literal distances from the edges, but are still proportional to distance from the corresponding edge.
+- Normalized weights are:
+    - Weight for A = edge_function(B, C, P) / area
+    - Weight for B = edge_function(C, A, P) / area
+    - Weight for C = edge_function(A, B, P) / area
