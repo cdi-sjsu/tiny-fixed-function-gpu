@@ -20,9 +20,10 @@ class ButtonModel:
             self.btn_o = 0
             return self.btn_o
 
-        self.sync_counter[1], self.sync_counter[0] = self.sync_counter[0], btn_i
-
         self.prev_debounced_state = self.debounced_state
+
+        # 2-stage sync
+        self.sync_counter[1], self.sync_counter[0] = self.sync_counter[0], btn_i
 
         # Start counter whenever the 2-phase sync and debounced_state are different
         if self.debounced_state != self.sync_counter[1]:
@@ -40,7 +41,7 @@ class ButtonModel:
         elif self.BUTTON_MODE == 1:  # Sustained mode
             self.btn_o = int(self.debounced_state)
         else:
-            raise ValueError("BUTTON_MODE must have a value [0, 1]")
+            raise ValueError("BUTTON_MODE must have a value [0, 1].")
 
         return self.btn_o
 
