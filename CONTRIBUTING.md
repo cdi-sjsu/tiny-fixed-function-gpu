@@ -43,7 +43,7 @@ git config --local commit.gpgsign false
 
 ## Check your changes
 
-Run `make format` after code changes and `make ci` before requesting review.
+Run `make format` after code changes and `make check` before requesting review.
 
 ## Committing
 

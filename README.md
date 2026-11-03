@@ -9,28 +9,39 @@ FPGA with VGA output.
 
 [Fall 2026 Club Project Board](https://github.com/orgs/cdi-sjsu/projects/1)
 
-| Team | Responsibility | Members | Source directory | Issue label |
-| --- | --- | --- | --- | --- |
-| [GPU Rasterizer](https://github.com/orgs/cdi-sjsu/teams/gpu-rasterizer) | Triangle rasterization, depth, and color | [@Nativity8904](https://github.com/Nativity8904) **(lead)**<br>[@Forensic257](https://github.com/Forensic257)<br>[@Umar316798](https://github.com/Umar316798) | [rtl/rasterizer/](rtl/rasterizer/README.md) | Rasterizer Team |
-| [GPU Geometry](https://github.com/orgs/cdi-sjsu/teams/gpu-geometry) | Vertex transforms and triangle interfaces | [@nicojeda189](https://github.com/nicojeda189) **(lead)**<br>[@Moodlethenoodle](https://github.com/Moodlethenoodle) | [rtl/geometry_engine/](rtl/geometry_engine/README.md) | Geometry Team |
-| [GPU Python Preprocessing](https://github.com/orgs/cdi-sjsu/teams/gpu-python-preprocessing) | Preprocessing scripts and generated GPU data | Lead: To be decided<br>No members assigned | `scripts/` | Python Preprocessing Team |
-| [GPU VGA](https://github.com/orgs/cdi-sjsu/teams/gpu-vga) | Framebuffer and VGA display output | Lead: To be decided<br>[@DelosReyesJordan](https://github.com/DelosReyesJordan) | [rtl/vga_controller/](rtl/vga_controller/README.md) | VGA Team |
+| Team | Responsibility | Lead | Members | Source directory | Issue label |
+| --- | --- | --- | --- | --- | --- |
+| [GPU Rasterizer](https://github.com/orgs/cdi-sjsu/teams/gpu-rasterizer) | Triangle rasterization, depth, and color | [@Nativity8904](https://github.com/Nativity8904) | [@Forensic257](https://github.com/Forensic257)<br>[@Umar316798](https://github.com/Umar316798)<br>[@raylandho](https://github.com/raylandho)<br>[@wintlaekyaw](https://github.com/wintlaekyaw)<br>[@imnttoxicanymore](https://github.com/imnttoxicanymore) | [rtl/rasterizer/](rtl/rasterizer/) | Rasterizer Team |
+| [GPU Geometry](https://github.com/orgs/cdi-sjsu/teams/gpu-geometry) | Vertex transforms and triangle interfaces | [@nicojeda189](https://github.com/nicojeda189) | [@Moodlethenoodle](https://github.com/Moodlethenoodle)<br>[@Sachin-Swami21](https://github.com/Sachin-Swami21)<br>[@imnttoxicanymore](https://github.com/imnttoxicanymore) | [rtl/geometry/](rtl/geometry/) | Geometry Team |
+| [GPU Python Preprocessing](https://github.com/orgs/cdi-sjsu/teams/gpu-python-preprocessing) | Preprocessing scripts and generated GPU data | To be decided | No members assigned | `scripts/` | Python Preprocessing Team |
+| [GPU VGA](https://github.com/orgs/cdi-sjsu/teams/gpu-vga) | Framebuffer and VGA display output | To be decided | [@DelosReyesJordan](https://github.com/DelosReyesJordan) | [rtl/vga/](rtl/vga/) | VGA Team |
 
 ## Getting Started
 
-1. Install [VS Code](https://code.visualstudio.com/) and its
-   [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
-2. Prepare Docker:
-   - **macOS:** Install [Docker Desktop](https://docs.docker.com/desktop/setup/install/mac-install/),
-     open it, and wait for the engine to start. Intel and Apple Silicon Macs are supported.
-   - **Windows:** Install [WSL 2](https://learn.microsoft.com/windows/wsl/install) with Ubuntu.
-     Install [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/)
-     with its WSL 2 backend and enable integration for Ubuntu. Restart when prompted and complete Ubuntu's first-run setup.
-3. Clone the repository and open it in VS Code.
-4. Select **Reopen in Container**, or run **Dev Containers: Reopen in Container** from
-   the Command Palette (`Shift+Command+P` on macOS, `Ctrl+Shift+P` on Windows).
-5. Run `make` in the container terminal to see available commands.
-6. Configure TerosHDL using the steps below.
+1. **Prepare Docker & Environment:**
+   - **Windows:**
+     1. Open PowerShell as Administrator and run:
+        ```powershell
+        wsl --install
+        ```
+        Restart your PC if prompted, then launch Ubuntu from the Start menu to set your username and password.
+     2. Install [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/). Ensure **Use the WSL 2 based engine** is checked during installation.
+     3. Open Docker Desktop, go to **Settings > Resources > WSL Integration**, turn on integration for **Ubuntu**, and select **Apply & restart**.
+   - **macOS:**
+     Install [Docker Desktop for Mac](https://docs.docker.com/desktop/setup/install/mac-install/), open it, and wait for the engine to start.
+
+2. **Install VS Code & Extensions:**
+   - Install [VS Code](https://code.visualstudio.com/).
+   - Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (and the [WSL extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl) on Windows).
+
+3. **Clone and Open in Container:**
+   - Clone this repository.
+   - Open the repository folder in VS Code.
+   - When prompted, select **Reopen in Container**, or open the Command Palette (`Ctrl+Shift+P` on Windows, `Cmd+Shift+P` on macOS) and run **Dev Containers: Reopen in Container**.
+
+4. **Verify & Configure:**
+   - Run `make` in the container terminal to list available workflows.
+   - Configure TerosHDL using the steps below.
 
 ### TerosHDL project
 
@@ -49,13 +60,20 @@ The Dev Container includes TerosHDL and its dependencies. To load this project:
 
 | Command | Behavior |
 | --- | --- |
-| `make` | List available workflows. |
-| `make setup` | Install development dependencies from `uv.lock`. |
-| `make format` | Format Python with Ruff and RTL with Verible. |
-| `make check` | Check Python lint/format, Verilator lint, Verible format, project metadata, and all tests. |
-| `make test` | Run registered Cocotb simulation suites with Verilator. |
-| `make waves` | Run the suites and write VCD traces under `.sim_build/verilator/<suite>/`. |
-| `make ci` | Check lockfile consistency, install dependencies, and run the full quality check. |
+| `make` | Show help message. |
+| `make edam` | Refresh the TerosHDL source list from `rtl/`. |
+| `make format` | Format Python and HDL code. |
+| `make check` | Run full lint, format check, and all tests. |
+| `make test` | Run software and tooling tests (`tests/`). |
+| `make tb` | Run hardware simulation testbenches (`tb/`). |
+| `make waves` | Run testbenches and record VCD waveforms. |
+
+The Dev Container installs dependencies automatically. The `edam.yml` source list
+regenerates during container setup and before formatting, checking, or running
+tests and simulations. After adding, removing, or renaming RTL files, use
+`make edam` to refresh it immediately before reloading the TerosHDL project.
+Project metadata such as the project name and selected top module remains configured
+in `edam.yml`; only the source list is generated.
 
 ## Repository structure
 
@@ -63,16 +81,24 @@ The Dev Container includes TerosHDL and its dependencies. To load this project:
 .devcontainer/       Required toolchain and TerosHDL configuration
 .github/workflows/   Container-based CI
 .vscode/             Editor settings and extension recommendations
-rtl/                 Verilog/SystemVerilog sources
+constraints/         FPGA board pin constraints (Arty S7-50 XDC)
+rtl/                 Synthesizable Verilog/SystemVerilog sources
   top.sv             Minimal GPU integration wrapper
-  geometry_engine/   Geometry subsystem planning notes
-  rasterizer/        Rasterizer planning notes
-  vga_controller/    VGA controller planning notes
+  pkg/               Shared GPU packages, structs, and vector typedefs
+  common/            Shared hardware utility modules
+  geometry/          Geometry subsystem sources
+  rasterizer/        Rasterizer subsystem sources
+  vga/               VGA subsystem sources
 scripts/             Python preprocessing overview and future LUT/mesh scripts
-tests/
-  cocotb/            Simulation runner and top-level smoke test
-  tools/             Infrastructure and EDAM consistency tests
-tools/               Shared HDL discovery and quality workflows
+tb/                  Hardware verification and Cocotb simulation suites
+  common/            Testbenches for shared hardware utility modules
+  geometry/          Geometry subsystem testbenches and simulation suites
+  rasterizer/        Rasterizer subsystem testbenches and simulation suites
+  top/               Top-level GPU wrapper and smoke tests
+  vga/               VGA controller and framebuffer simulation suites
+tests/               Repository, toolchain, and metadata consistency tests
+  tools/             EDAM and HDL discovery consistency tests
+tools/               Shared simulation runner, HDL discovery, and quality workflows
 CONTRIBUTING.md      Repository contributor and review workflow
 edam.yml             TerosHDL source list and top-level selection
 pyproject.toml       Python dependencies and tool configuration

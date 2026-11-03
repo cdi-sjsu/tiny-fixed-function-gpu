@@ -9,32 +9,43 @@ UV_RUN ?= $(UV) run --frozen
 UV_SYNC ?= $(UV) sync --frozen
 PYTEST ?= $(UV_RUN) pytest
 
-.PHONY: help setup format check test waves ci
+.PHONY: help setup edam format check test tb waves ci
 
-help: ## List available workflows
-	@awk 'BEGIN { FS = ":.*## "; print "Available commands:" } /^[A-Za-z0-9_-]+:.*## / { printf "  make %-16s %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
+help: ## Show this help message
+	@awk 'BEGIN { FS = ":.*## "; print "Available commands:" } /^[A-Za-z0-9_-]+:.*## / { printf "  make %-10s %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
-setup: ## Install locked Python development dependencies
+setup:
 	$(UV_SYNC)
+	$(MAKE) edam
 
-format: ## Format Python and HDL sources
+edam: ## Refresh the RTL project source list
+	$(UV_RUN) python -m tools.generate_edam
+
+format check test tb waves: edam
+
+format: ## Format Python and HDL code
 	$(UV_RUN) ruff format .
 	$(UV_RUN) python -m tools.hdl_workflow format
 
-check: ## Check formatting, lint, project metadata, and tests
+check: ## Run full lint, format check, and all tests
 	$(UV_RUN) ruff check .
 	$(UV_RUN) ruff format --check .
 	$(UV_RUN) python -m tools.hdl_workflow lint
 	$(UV_RUN) python -m tools.hdl_workflow verify
-	SIM=$(SIM) $(PYTEST)
+	SIM=$(SIM) $(PYTEST) tests tb
 
-test: ## Run registered Cocotb simulation suites
-	SIM=$(SIM) $(PYTEST) tests/cocotb/test_runner.py
+TARGET ?=
 
-waves: ## Run registered simulations with waveform output
-	WAVES=1 SIM=$(SIM) $(PYTEST) tests/cocotb/test_runner.py
+test: ## Run software and tooling tests
+	$(PYTEST) $(if $(TARGET),$(if $(filter tests/%,$(TARGET)),$(TARGET),tests/$(TARGET)),tests)
 
-ci: ## Validate the lockfile and run the complete quality gate
+tb: ## Run hardware simulation testbenches
+	SIM=$(SIM) $(PYTEST) $(if $(TARGET),$(if $(filter tb/%,$(TARGET)),$(TARGET),tb/$(TARGET)),tb)
+
+waves: ## Run testbenches and record VCD waveforms
+	WAVES=1 SIM=$(SIM) $(PYTEST) $(if $(TARGET),$(if $(filter tb/%,$(TARGET)),$(TARGET),tb/$(TARGET)),tb)
+
+ci:
 	$(UV) lock --check
 	$(MAKE) setup
 	$(MAKE) check

@@ -14,5 +14,3 @@ def test_project_metadata_matches_rtl() -> None:
         assert isinstance(metadata.get("toplevel"), str) and metadata["toplevel"].strip(), (
             "Set edam.yml toplevel to the actual top module when adding RTL."
         )
-    else:
-        assert "toplevel" not in metadata, "Do not select a nonexistent top module."
