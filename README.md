@@ -2,7 +2,7 @@
 
 A CDI SJSU project to build a fixed-function 3D graphics accelerator in
 SystemVerilog targeting the
-[Digilent Arty S7-50](https://digilent.com/shop/arty-s7-spartan-7-fpga-development-board/)
+[Digilent Arty A7-100T](https://digilent.com/shop/arty-a7-artix-7-fpga-development-board/)
 FPGA with VGA output.
 
 ## Project and Teams
@@ -81,7 +81,7 @@ in `edam.yml`; only the source list is generated.
 .devcontainer/       Required toolchain and TerosHDL configuration
 .github/workflows/   Container-based CI
 .vscode/             Editor settings and extension recommendations
-constraints/         FPGA board pin constraints (Arty S7-50 XDC)
+constraints/         FPGA board pin constraints (Arty A7-100T XDC)
 rtl/                 Synthesizable Verilog/SystemVerilog sources
   top.sv             Minimal GPU integration wrapper
   pkg/               Shared GPU packages, structs, and vector typedefs
