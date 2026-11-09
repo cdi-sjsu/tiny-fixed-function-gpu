@@ -1,11 +1,26 @@
 # Geometry Meeting 2 — Dot Product Arithmetic Architecture
 
-**Date:** 10/16/2026  
-**Time:** 11:30 AM–1:00 PM   
-**Geoemtry team**
-## Meeting Goal
+**Date & Time:** 10/16/2026  | 11:30 –13:00 (PDT)<br>
+**Location / Link:** Discord Call (CDI - SERVER)
+**Facilitator:** Nicolas Ojeda
+**Note Taker:** Nicolas Ojeda
+**Meeting Status:** Completed on October 19, 2026.
 
-Understand sequential and parallel dot-product hardware and decide who should develop the Arithmetic unit, Rotation Matrix (Python) LUT, research how Clipping will work, and figure out how material data will passthrough to rasterization team   .
+---
+
+### Attendees
+* **Present:** Nicolas Ojeda, Sachin, Preston, Sean
+* **Absent / Excused:** No one
+
+---
+
+### Agenda & Objectives
+1. Understanding Sequential Vs Parralel Dot-Product hardware
+2. Decide who does the VALU (Vector ALU)
+3. Decide who does The Research for Clipping and Material Passthrough
+4. Decide who does the Sine & Cos Pre-Processing
+
+---
 
 ## DEMO
 
@@ -21,11 +36,11 @@ We will compare two four-term signed Q16.16 dot products:
   - Two first-level adders
   - One final adder
   - Balanced addition tree
-| Type       | how long it took for EDA Playground simulation timing | Pros                            | Cons                                                           |
-|------------|------------------|---------------------------------|-----------------------------------------------------------------------------------------------------|
-| Sequential | 45 nano sec      | Its super cheap, easy to reuse  | we dont really need super cheap, its 9 times slower for just one dot product (not even a vertex!)   |
-| Parralel   | 5 nano sec       | its more expensive, much faster | since we have to consider more variables at once it can get way harder to debug and pinpoint issues |
-
+### Demo Comparison
+| Type | EDA Simulation Time | Pros | Cons |
+| :--- | :--- | :--- | :--- |
+| **Sequential** | 45 ns | Low area cost; easy logic reuse | 9× slower for a single dot product (doesn't scale well for complete vertices) |
+| **Parallel** | 5 ns | Significantly higher throughput | Higher area cost; increased variable tracking makes debug/isolation harder |
 <img width="3726" height="291" alt="image" src="https://github.com/user-attachments/assets/cde612d6-1afd-450d-a324-41c6bba87d75" />
 
 [EDA Playground Sim](https://edaplayground.com/x/hzKt)
@@ -50,10 +65,12 @@ THe pipeline diagram:
 
 - Dot-product architecture:
     - for example
-| Clock 1: multipliers work on A  |                         |                        |   |
-|---------------------------------|-------------------------|------------------------|---|
-|  Clock 2: multipliers work on B |  first adders work on A |                        |   |
-| Clock 3: multipliers work on C  | first adders work on B  | final adder works on A |   |
+### Pipeline Stage Timing Example
+| Clock Cycle | Multipliers | First-Level Adders | Final Adder |
+| :---: | :--- | :--- | :--- |
+| **1** | Process Vertex A | — | — |
+| **2** | Process Vertex B | Process Vertex A | — |
+| **3** | Process Vertex C | Process Vertex B | Process Vertex A |
     - Or you have two have these ALU models and it would be 2x faster working this way so one works on A B other works on C
     - and if we really wanted since we want to maximize time, four of these could work, FYI A B C is each vertice but the ALU were making or GAU
     - the GAU is only doing one row at a time, so we could do one GAU does 4 repeats on A efficiently
@@ -88,14 +105,14 @@ Python Q16.16 sine/cosine LUT generator
 Clipping algorithm and interface research
 Material/color pass-through proposal for rasterization
 
-## Action Items
-nic must make action item in github project
+### Action Items
 | Owner | Deliverable | Due Date | Status |
-| Nic | :--- | :--- | :--- |
-| Preston | :--- | :--- | :--- |
-| Sean | :--- | :--- | :--- |
-| Sachin | :--- | :--- | :--- |
+| :--- | :--- | :---: | :---: |
+| **Nic** | Workin on VGA | 2026-10-23 | Not Started |
+| **Preston** | Initial Geometry Arithmetic Unit (GAU/VALU) implementation | 2026-10-23 | Not Started |
+| **Sean** | Python Q16.16 sine/cosine LUT generator | 2026-10-23 | Started |
+| **Sachin** | Clipping Algorithm/Interface & Material/color pass-through proposal for rasterization | 2026-10-23 | Not Started |
 
 ### Next Steps & Follow-Up
-* **Next Meeting:** 2026-10-23 | 11:30 – 1:00
-* Review the three follow-up deliverables after their deadline;
+* **Next Meeting:** 2026-10-23 | 11:30 – 1:00 (PDT)
+* Review the three follow-up deliverables after their deadline; and decide where to go from there
