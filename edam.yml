@@ -2,7 +2,17 @@
 name: tiny_fixed_function_gpu
 toplevel: top
 files:
+- name: rtl/pkg/geometry_pkg.sv
+  file_type: systemVerilogSource
 - name: rtl/pkg/gpu_pkg.sv
+  file_type: systemVerilogSource
+- name: rtl/pkg/rasterizer_pkg.sv
+  file_type: systemVerilogSource
+- name: rtl/interfaces/memory_read_if.sv
+  file_type: systemVerilogSource
+- name: rtl/interfaces/memory_write_if.sv
+  file_type: systemVerilogSource
+- name: rtl/interfaces/stream_if.sv
   file_type: systemVerilogSource
 - name: rtl/common/button.sv
   file_type: systemVerilogSource
