@@ -15,12 +15,13 @@ dev = [
     "ruff==0.13.2",
     "vunit-hdl==4.7.1",
     "yowasp-yosys==0.68.0.0.post1208",
+    "fxpmath==0.4.10",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "tb"]
 python_files = ["test_*.py"]
-pythonpath = [".", "tb", "tb/top", "tb/rasterizer", "tb/geometry", "tb/vga", "tests"]
+pythonpath = [".", "tb", "tb/helpers/structs", "tb/top", "tb/rasterizer", "tb/geometry", "tb/vga", "tests"]
 addopts = "-ra"
 
 [tool.ruff]
