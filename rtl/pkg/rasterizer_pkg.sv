@@ -8,7 +8,9 @@ package rasterizer_pkg;
 
     // Internal depth and color calculations.
     localparam int ATTR_WIDTH = 48;
+    /* verilator lint_off UNUSEDPARAM */
     localparam int ATTR_FRAC_BITS = 16;
+    /* verilator lint_on UNUSEDPARAM */
     typedef logic signed [ATTR_WIDTH-1:0] attribute_t;
 
     // Color channels use the same fixed-point scale as depth.
@@ -21,7 +23,9 @@ package rasterizer_pkg;
     } color_attribute_t;
 
     // Smaller depth wins. This value cannot be drawn with a strict < test.
+    /* verilator lint_off UNUSEDPARAM */
     localparam gpu_pkg::depth_t DEPTH_CLEAR = '1;
+    /* verilator lint_on UNUSEDPARAM */
 
     // Triangle setup -> bounding-box walker
     typedef struct packed {

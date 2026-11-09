@@ -6,7 +6,9 @@ package gpu_pkg;
     // Projected vertex attributes
     // Screen origin is top left, X goes right, Y goes down.
     localparam int COORD_WIDTH = 20;
+    /* verilator lint_off UNUSEDPARAM */
     localparam int COORD_FRAC_BITS = 4;
+    /* verilator lint_on UNUSEDPARAM */
     typedef logic signed [COORD_WIDTH-1:0] screen_coord_t;
 
     // Depth after projection (smaller is closer).

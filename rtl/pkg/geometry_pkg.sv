@@ -6,7 +6,9 @@ package geometry_pkg;
     localparam int GEOMETRY_WIDTH = 32;
     localparam int GEOMETRY_FRAC_BITS = 16;
     typedef logic signed [GEOMETRY_WIDTH-1:0] geometry_scalar_t;
+    /* verilator lint_off UNUSEDPARAM */
     localparam geometry_scalar_t GEOMETRY_ONE = geometry_scalar_t'(1) << GEOMETRY_FRAC_BITS;
+    /* verilator lint_on UNUSEDPARAM */
 
     // Homogeneous vector before perspective division.
     typedef struct packed {
