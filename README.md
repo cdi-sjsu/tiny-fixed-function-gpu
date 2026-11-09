@@ -92,6 +92,9 @@ rtl/                 Synthesizable Verilog/SystemVerilog sources
 scripts/             Python preprocessing overview and future LUT/mesh scripts
 tb/                  Hardware verification and Cocotb simulation suites
   common/            Testbenches for shared hardware utility modules
+  helpers/           Shared testbench utilities and fixed-point model types
+    functions/       Cocotb coroutine helpers (e.g. reset)
+    structs/         Fixed-point dataclasses (XYZWVector, DisplayTriangle)
   geometry/          Geometry subsystem testbenches and simulation suites
   rasterizer/        Rasterizer subsystem testbenches and simulation suites
   top/               Top-level GPU wrapper and smoke tests
