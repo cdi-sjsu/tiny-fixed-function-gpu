@@ -41,7 +41,7 @@ Key questions to review and discuss:
 * How do barycentric weights map to depth and color interpolation?
   * $z = \lambda_0 z_0 + \lambda_1 z_1 + \lambda_2 z_2$ gives affine depth.
   * Same formula for Gouraud R, G, B channels.
-  * The design currently uses **affine Gouraud** (screen-space planes), not perspective-correct — confirm this is acceptable for the first demo.
+  * The design currently uses **affine Gouraud**, not perspective-correct — confirm this is acceptable?
 ##### Z-Buffer Pipeline
 
 ![Wint's Z-buffer pipeline flowchart](assets/wint_zbuffer_pipeline.jpg)
@@ -118,22 +118,60 @@ The PR also added new scaffold modules. All are unimplemented (outputs tied to s
 
 ##### `rasterizer_top` (wiring complete, all sub-modules stubbed)
 
-The pipeline is fully connected. Data flow:
+The pipeline is fully connected. Data flow and control architecture:
 
-```
-commands (raster_command_t stream)
-  → [frame_controller: draw_enable gating]
-  → triangle_fifo (sync_fifo)
-  → triangle_setup
-  → bbox_walker
-  → edge_evaluator  ← (existing, implemented)
-  → fragment_interpolator
-  → pixel_commit ←→ z_buffer
-                 → color_write (external framebuffer)
-                 → fence → frame_controller → frame_done
+```mermaid
+flowchart TD
+    subgraph Control ["Frame Control & Clear"]
+        FC["frame_controller (FSM)"]
+        BC["buffer_clear"]
+        FC -- "clear_start (clear_color)" --> BC
+        BC -- "clear_done" --> FC
+        FC -. "clear_active (mux select)" .-> MUX_D
+        FC -. "clear_active (mux select)" .-> MUX_C
+    end
 
-buffer_clear ←→ z_buffer (depth) + color_write (color)
-memory_write_mux: selects commit vs. clear owner per buffer
+    subgraph Pipeline ["Rasterization Pipeline"]
+        CMD["commands (raster_command_t)"]
+        GATE{"draw_enable gate"}
+        FIFO["triangle_fifo (sync_fifo)"]
+        TS["triangle_setup"]
+        BW["bbox_walker"]
+        EE["edge_evaluator (implemented)"]
+        FI["fragment_interpolator"]
+        PC["pixel_commit"]
+
+        CMD --> GATE
+        GATE --> FIFO
+        FIFO --> TS
+        TS --> BW
+        BW --> EE
+        EE --> FI
+        FI --> PC
+    end
+
+    subgraph Memory ["Memory Routing & Storage"]
+        MUX_D["memory_write_mux (depth)"]
+        MUX_C["memory_write_mux (color)"]
+        ZB["z_buffer (BRAM)"]
+        FB["External Framebuffer (color_write)"]
+
+        MUX_D --> ZB
+        MUX_C --> FB
+    end
+
+    %% Pipeline control and synchronization
+    FC -- "draw_enable" --> GATE
+    PC -- "fence" --> FC
+    FC --> FD["frame_done"]
+
+    %% Memory interactions
+    PC -. "depth_read" .-> ZB
+    PC -- "commit_depth_write" --> MUX_D
+    PC -- "commit_color_write" --> MUX_C
+
+    BC -- "clear_depth_write" --> MUX_D
+    BC -- "clear_color_write" --> MUX_C
 ```
 
 ##### New modules needing implementation
@@ -193,9 +231,3 @@ An unstaged `edam.yml` modification adds the seven new RTL files to the build. N
 
 ### Next Steps & Follow-Up
 * **Next Meeting:** TBD
-* **Artifacts / Links:**
-  * [Meeting 2: Pineda walkthrough and interface design](meeting_2.md)
-  * [Meeting 1: Rasterization options](meeting_1.md)
-  * [Rasterization algorithms, interfaces, and pseudocode: issue #19](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/19)
-  * [Research Z-buffer integration with Pineda: issue #25](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/25)
-  * [PR #55: Split RTL packages, add SV interfaces, order sources by kind](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/pull/55)
