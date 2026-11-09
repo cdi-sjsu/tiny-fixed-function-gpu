@@ -30,12 +30,18 @@ def _resolve_sources(
     discovered_sources: Sequence[HdlSource | Path] | None,
     include_packages: bool = True,
 ) -> list[Path]:
-    """Resolve and order HDL sources, prepending shared packages automatically."""
+    """Resolve HDL sources, prepending packages and interfaces automatically."""
     packages: list[Path] = []
     if include_packages:
         pkg_dir = PROJECT_ROOT / "rtl/pkg"
         if pkg_dir.is_dir():
             packages = [s.path for s in discover_sources(pkg_dir)]
+
+    interfaces: list[Path] = []
+    if include_packages:
+        interface_dir = PROJECT_ROOT / "rtl/interfaces"
+        if interface_dir.is_dir():
+            interfaces = [s.path for s in discover_sources(interface_dir)]
 
     raw_sources: list[Path] = []
     if suite_sources:
@@ -44,7 +50,7 @@ def _resolve_sources(
         raw_sources = [s.path if isinstance(s, HdlSource) else s for s in discovered_sources]
 
     ordered: list[Path] = []
-    for path in packages + raw_sources:
+    for path in packages + interfaces + raw_sources:
         resolved = path.resolve()
         if resolved not in ordered:
             ordered.append(resolved)
