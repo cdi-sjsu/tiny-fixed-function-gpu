@@ -40,3 +40,10 @@ Weights
     - Weight for A = edge_function(B, C, P) / area
     - Weight for B = edge_function(C, A, P) / area
     - Weight for C = edge_function(A, B, P) / area
+
+----------------------------------
+1) Find edges
+2) Create bounding box
+3) Find weights to each edge
+4) Index across row 1, bottom left -> right
+5) Move up one row, repeat
