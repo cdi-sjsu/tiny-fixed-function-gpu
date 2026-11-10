@@ -93,7 +93,7 @@ flowchart TD
         FIFO["triangle_fifo (sync_fifo)"]
         TS["triangle_setup"]
         BW["bbox_walker"]
-        EE["edge_evaluator (implemented)"]
+        EE["edge_evaluator"]
         FI["fragment_interpolator"]
         PC["pixel_commit"]
 
@@ -138,8 +138,8 @@ flowchart TD
   * Bounding box calculation, screen clamping, winding check, and initial edge/attribute gradients at the starting pixel.
 * [`bbox_walker`](../../../rtl/rasterizer/bbox_walker.sv) — *Stubbed*
   * Traverses bounding box scanlines and steps edge, depth, and color accumulators.
-* [`edge_evaluator`](../../../rtl/rasterizer/edge_evaluator.sv) — **Implemented**
-  * Tests sample coverage against all three edges and applies top-left tie-breaking rules.
+* [`edge_evaluator`](../../../rtl/rasterizer/edge_evaluator.sv) — *Stubbed*
+  * Tests sample coverage against all three edges, applies top-left tie-breaking rules, discards outside samples, and passes end-of-frame markers.
 * [`fragment_interpolator`](../../../rtl/rasterizer/fragment_interpolator.sv) — *Stubbed*
   * Rounds and clamps 48-bit depth/color attributes into 16-bit depth and 12-bit RGB444 fragments.
 * [`pixel_commit`](../../../rtl/rasterizer/pixel_commit.sv) — *Stubbed*
@@ -180,6 +180,7 @@ flowchart TD
 | Present Z-buffer research & barycentric math | Wint | 2026-11-10 | Ready |
 | `triangle_setup` implementation | TBD | TBD | Unassigned |
 | `bbox_walker` & accumulator stepping | TBD | TBD | Unassigned |
+| `edge_evaluator` coverage & top-left rules | TBD | TBD | Unassigned |
 | `pixel_commit` & depth-test logic | TBD | TBD | Unassigned |
 | `buffer_clear` & `frame_controller` | TBD | TBD | Unassigned |
 | `z_buffer` BRAM wrapper | TBD | TBD | Unassigned |
