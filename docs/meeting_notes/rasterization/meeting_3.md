@@ -9,116 +9,72 @@
 ---
 
 ### Attendees
-* **Present:** Kyle - @Nativity8904, Sean — @imnttoxicanymore, Wint — @wintlaekyaw, Rayland — @raylandho
+* **Present:** Kyle Ringor, Sean, Wint, Rayland
 * **Absent / Excused:** None
 
 ---
 
 ### Agenda & Objectives
 1. Wint's research: Z-buffer integration and barycentric weights.
-2. Tour of new packages: `gpu_pkg` and `rasterizer_pkg`.
-3. Tour of new RTL modules and scaffolding.
-4. Implementation assignments and next steps.
+2. Quick tour of the new packages (`gpu_pkg`, `rasterizer_pkg`, `geometry_pkg`) and interfaces from PR #55.
+3. RTL pipeline scaffolding walkthrough and module assignments.
+4. Open design questions and next sprint tasks.
 
 ---
 
 ### Discussion Points
 
-#### 1. Wint's Z-Buffer Research: Barycentric Weights
+#### 1. Wint's Z-Buffer & Barycentric Weights Research
 
-Wint's action item from Meeting 2 was to research [Z-buffer integration with Pineda (#25)](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/25).
+Wint looked into integrating depth buffering with the Pineda rasterizer ([issue #25](https://github.com/cdi-sjsu/tiny-fixed-function-gpu/issues/25)).
 
 ##### Barycentric Weights from Edge Functions
 
 ![Wint's barycentric weight derivation](assets/wint_barycentric_weights.jpg)
 
-Key questions to review and discuss:
+* **Key Takeaway:** Edge values $e_0, e_1, e_2$ are proportional to the signed sub-areas of the triangle.
+* **Weights:** $\lambda_i = e_i / \text{total\_area}$, where the denominator is the signed area of the whole triangle.
+* To keep the pixel pipeline fast and avoid a divider per pixel, we precompute $1 / \text{area}$ once during `triangle_setup`.
+* **Interpolation:**
+  * Affine depth: $z = \lambda_0 z_0 + \lambda_1 z_1 + \lambda_2 z_2$
+  * Affine Gouraud: Same linear interpolation for R, G, and B.
+  * *Question for the team:* Affine Gouraud (screen-space linear) doesn't account for perspective foreshortening, but it completely avoids per-pixel division. Is this good enough for our first milestone demo?
 
-* How are barycentric weights computed from the Pineda edge functions?
-  * Edge values $e_0, e_1, e_2$ are proportional to signed areas of sub-triangles.
-  * Normalized weights: $\lambda_i = e_i / (e_0 + e_1 + e_2)$, where the denominator is the signed area of the full triangle.
-  * We precompute $1 / \text{area}$ during triangle setup to avoid dividing every pixel.
-* How do barycentric weights map to depth and color interpolation?
-  * $z = \lambda_0 z_0 + \lambda_1 z_1 + \lambda_2 z_2$ gives affine depth.
-  * Same formula for Gouraud R, G, B channels.
-  * The design currently uses **affine Gouraud**, not perspective-correct — confirm this is acceptable?
-##### Z-Buffer Pipeline
+##### Z-Buffer Pipeline Flow
 
 ![Wint's Z-buffer pipeline flowchart](assets/wint_zbuffer_pipeline.jpg)
 
-* How does the Z-buffer integrate with the pipeline?
-  * `pixel_commit` reads depth, compares new < stored (smaller = closer), then writes depth and color if it passes.
-  * `buffer_clear` initializes depth to `DEPTH_CLEAR` (`all ones`) and color to the background before each frame.
-  * `z_buffer` module owns BRAM storage; RAM size confirmed to fit on the Arty A7-100T (see Open Questions).
-
-**Open Questions:**
-* Did Wint's research identify any issues with the affine-only depth formulation, or do we need perspective-correct depth?
-* What BRAM resources does a 640 × 480 × 16-bit depth buffer require, and do we fit on the Arty A7-100T?
+* Depth test rule: Smaller $z$ is closer. A pixel passes if $z_{\text{new}} < z_{\text{stored}}$.
+* `pixel_commit` handles the read-modify-write: reads depth from BRAM, tests it, and writes updated depth + color on pass.
+* `buffer_clear` resets depth to `0xFFFF` (`DEPTH_CLEAR`) and fills color with the background before drawing starts.
 
 ---
 
-#### 2. New Package Contents
+#### 2. Package & Interface Cleanup (PR #55)
 
-The last PR (#55) split the original `gpu_pkg` into three packages and added SV interfaces. Walk the team through the changes.
+PR #55 split the monolithic `gpu_pkg` into cleaner, dedicated packages and replaced loose wiring with SystemVerilog interfaces:
 
-##### `gpu_pkg` (shared types — Geometry → Rasterizer and Rasterizer → Framebuffer/VGA)
-
-| Type / Parameter | Description |
-| :--- | :--- |
-| `COORD_WIDTH = 20`, `COORD_FRAC_BITS = 4` | Fixed-point screen coordinate, origin top-left, X right, Y down |
-| `screen_coord_t` | `logic signed [19:0]` |
-| `DEPTH_WIDTH = 16`, `depth_t` | 16-bit unsigned depth; all-ones reserved for clear |
-| `rgb444_t` | `{red[3:0], green[3:0], blue[3:0]}` |
-| `raster_vertex_t` | `{x, y, z, color}` — one vertex on the interface |
-| `raster_triangle_t` | `{v0, v1, v2}` |
-| `raster_command_t` | `{end_frame, triangle}` — `end_frame=1` signals end of frame |
-| `color_write_t` | `{address, color}` — Rasterizer → Framebuffer write packet |
-| `RENDER_WIDTH/HEIGHT`, `PIXEL_COUNT` | 640 × 480 = 307,200 pixels |
-| `pixel_x_t`, `pixel_y_t`, `pixel_addr_t` | Computed log2 widths; address = y × 640 + x |
-
-##### `rasterizer_pkg` (internal rasterizer types)
-
-| Type / Parameter | Description |
-| :--- | :--- |
-| `EDGE_WIDTH = 2 * COORD_WIDTH + 2 = 42` | Extra bits for intermediate edge products |
-| `edge_value_t` | `logic signed [41:0]` |
-| `ATTR_WIDTH = 48`, `ATTR_FRAC_BITS = 16` | Fixed-point for depth and color interpolation |
-| `attribute_t` | `logic signed [47:0]` |
-| `color_attribute_t` | `{r, g, b}` — each channel is `attribute_t`; signed to handle gradients |
-| `DEPTH_CLEAR` | `'1` (all ones — cannot be drawn with strict `<` test) |
-| `triangle_setup_t` | Full setup: bounds, edge start/dx/dy, inclusive-edge flags, z/color start/dx/dy |
-| `raster_sample_t` | Walker output: pixel (x,y), edges, z, interpolated color |
-| `fragment_t` | After interpolation: (x,y), rounded `depth_t`, packed `rgb444_t` |
-| `depth_write_t` | `{address, depth}` — Z-buffer write packet |
-
-##### `geometry_pkg` (new, Geometry Team's types)
-
-| Type / Parameter | Description |
-| :--- | :--- |
-| `GEOMETRY_WIDTH = 32`, `GEOMETRY_FRAC_BITS = 16` | Signed 32-bit fixed-point, 16 fractional bits |
-| `geometry_scalar_t` | `logic signed [31:0]` |
-| `GEOMETRY_ONE` | `1 << 16` |
-| `xyzw_vector_t` | Homogeneous `{x, y, z, w}` before perspective division |
-| `geometry_triangle_t` | `{vector_1, vector_2, vector_3}` |
-| `transformation_matrix_t` | `4×4` matrix of `geometry_scalar_t` |
-
-##### New SV Interfaces
-
-| Interface | Purpose |
-| :--- | :--- |
-| `stream_if #(DATA_T)` | Generic ready/valid channel; `producer` and `consumer` modports |
-| `memory_read_if #(ADDR_T, DATA_T)` | Decoupled read request + response with separate handshakes |
-| `memory_write_if #(DATA_T)` | Write request + completion (done) with separate handshakes |
+* **`gpu_pkg` (Inter-Team Interface):**
+  * Shared between Geometry, Rasterizer, and Framebuffer/VGA.
+  * Fixed-point screen coordinates: 20-bit signed Q16.4 (`screen_coord_t`).
+  * Formats: 16-bit depth (`depth_t`), 12-bit color (`rgb444_t`), and `raster_command_t` packets (triangle data + `end_frame` marker).
+  * Resolution constants for 640 × 480 (307,200 pixels).
+* **`rasterizer_pkg` (Internal Pipeline Types):**
+  * Wide fixed-point types for internal math: 42-bit edge accumulators (`edge_value_t`) and 48-bit Q32.16 attribute accumulators (`attribute_t`).
+  * Pipeline data structures: `triangle_setup_t`, `raster_sample_t`, and final clamped `fragment_t`.
+* **`geometry_pkg` (Geometry Team Types):**
+  * 32-bit Q16.16 types (`geometry_scalar_t`), 4D vectors (`xyzw_vector_t`), and $4 \times 4$ transformation matrices.
+* **Standardized SV Interfaces:**
+  * `stream_if`: Ready/valid handshake channel for streaming pipeline stages.
+  * `memory_read_if` & `memory_write_if`: Decoupled request/response handshakes for BRAM and external framebuffer access.
 
 ---
 
-#### 3. New RTL Modules
+#### 3. Pipeline Architecture & RTL Scaffolding
 
-The PR also added new scaffold modules. All are unimplemented (outputs tied to safe stub values) with detailed `TODO` comments. Walk through each so everyone knows their assignment.
+All modules for `rasterizer_top` have been scaffolded with ports and stubs.
 
-##### `rasterizer_top` (wiring complete, all sub-modules stubbed)
-
-The pipeline is fully connected. Data flow and control architecture:
+##### Top-Level Architecture
 
 ```mermaid
 flowchart TD
@@ -174,60 +130,63 @@ flowchart TD
     BC -- "clear_color_write" --> MUX_C
 ```
 
-##### New modules needing implementation
+##### Module Status & Assignments
 
-| Module | Responsibility | Status |
-| :--- | :--- | :--- |
-| [`frame_controller`](../../../rtl/rasterizer/frame_controller.sv) | IDLE → CLEAR → DRAW → DRAIN → DONE state machine; gates `draw_enable`; issues `clear_start`; waits for `fence` before asserting `frame_done` | Stubbed |
-| [`triangle_setup`](../../../rtl/rasterizer/triangle_setup.sv) | Normalize winding; clamp bounding box to screen; compute unbiased edge values, top-left flags, and depth/color gradients at first pixel center | Stubbed |
-| [`bbox_walker`](../../../rtl/rasterizer/bbox_walker.sv) | Walk xmin..xmax, ymin..ymax; step edge, z, and color accumulators; skip empty triangles; pass end-of-frame markers | Stubbed |
-| [`fragment_interpolator`](../../../rtl/rasterizer/fragment_interpolator.sv) | Round and clamp depth to `depth_t`; round and clamp each color channel to 0..15; pack `rgb444_t` | Stubbed |
-| [`pixel_commit`](../../../rtl/rasterizer/pixel_commit.sv) | Read depth; compare new < stored; write depth + color; wait for both completions; pass end-of-frame fence after all writes done | Stubbed |
-| [`buffer_clear`](../../../rtl/rasterizer/buffer_clear.sv) | Walk addresses 0..PIXEL_COUNT-1; write both color and depth per pixel; signal done after all writes | Stubbed |
-| [`z_buffer`](../../../rtl/rasterizer/z_buffer.sv) | BRAM storage for 16-bit depth; read/write via `memory_read_if` / `memory_write_if`; RAM budget confirmed for Arty A7-100T | Stubbed |
-| [`memory_write_mux`](../../../rtl/common/memory_write_mux.sv) | Routes writes and completions to one of two requesters based on `select_b` | **Implemented** |
-
-##### Existing implemented module
-* [`edge_evaluator`](../../../rtl/rasterizer/edge_evaluator.sv) — coverage test: inside is positive, respects `inclusive_edge` top-left flags.
-
-##### Pending `edam.yml` change
-
-An unstaged `edam.yml` modification adds the seven new RTL files to the build. Needs review and commit.
+* [`frame_controller`](../../../rtl/rasterizer/frame_controller.sv) — *Stubbed*
+  * Main FSM: IDLE → CLEAR → DRAW → DRAIN → DONE. Gates incoming commands, starts buffer clearing, and asserts `frame_done` once the fence returns.
+* [`triangle_setup`](../../../rtl/rasterizer/triangle_setup.sv) — *Stubbed*
+  * Bounding box calculation, screen clamping, winding check, and initial edge/attribute gradients at the starting pixel.
+* [`bbox_walker`](../../../rtl/rasterizer/bbox_walker.sv) — *Stubbed*
+  * Traverses bounding box scanlines and steps edge, depth, and color accumulators.
+* [`edge_evaluator`](../../../rtl/rasterizer/edge_evaluator.sv) — **Implemented**
+  * Tests sample coverage against all three edges and applies top-left tie-breaking rules.
+* [`fragment_interpolator`](../../../rtl/rasterizer/fragment_interpolator.sv) — *Stubbed*
+  * Rounds and clamps 48-bit depth/color attributes into 16-bit depth and 12-bit RGB444 fragments.
+* [`pixel_commit`](../../../rtl/rasterizer/pixel_commit.sv) — *Stubbed*
+  * Read-modify-write depth test, writeback to depth/color, and fence token generation for frame completion.
+* [`buffer_clear`](../../../rtl/rasterizer/buffer_clear.sv) — *Stubbed*
+  * Increments through all 307,200 pixel addresses writing clear depth and background color.
+* [`z_buffer`](../../../rtl/rasterizer/z_buffer.sv) — *Stubbed*
+  * BRAM wrapper exposing `memory_read_if` and `memory_write_if`.
+* [`memory_write_mux`](../../../rtl/common/memory_write_mux.sv) — **Implemented**
+  * Arbitrates write access between `buffer_clear` and `pixel_commit`.
 
 ---
 
 #### 4. Open Design Questions
 
-* **Z-buffer BRAM size:** 640 × 480 × 16-bit = 4,915,200 bits ≈ 600 KB. The Arty A7-100T has 4.86 Mb of BRAM (135 × 36Kb blocks), which comfortably fits both the depth buffer and color framebuffer on-chip. No external memory should be needed.
-* **Perspective-correct depth/color:** Current plan is affine Gouraud. Is that sufficient for the first demo, or do we need a reciprocal/division stage?
-* **`triangle_setup` winding normalization:** When winding is flipped, vertex colors must be swapped to match the new $v_0, v_1, v_2$ assignment. Confirm the swap strategy.
-* **`pixel_commit` depth address:** `address = y * RENDER_WIDTH + x` — confirm this is computed by a multiply or a shift-and-add, and whether it should live here or in `triangle_setup`.
-* **Testbench coverage:** `tb/rasterizer/` currently only has an `__init__.py`. Who writes the rasterizer testbench and what scenarios does it cover first?
+* **BRAM Capacity on Arty A7-100T:**
+  * 640 × 480 × 16-bit depth = ~4.9 Mb.
+  * The A7-100T has 4.86 Mb of block RAM. If we keep native 640 × 480 with both color and depth, double check if we need 320 × 240 scaled rendering or if we fit tightly on-chip.
+* **Affine vs. Perspective-Correct:**
+  * Affine interpolation is simple and keeps our pipeline adder-only. Are we all agreed on sticking with affine for demo 1?
+* **Winding Normalization:**
+  * When flipping winding order in setup, remember to swap vertex colors/depths alongside coordinates.
+* **Framebuffer Address Calculation:**
+  * Address formula is $y \times 640 + x$. We can implement this with shift-and-add: $(y \ll 9) + (y \ll 7) + x$ (512 + 128 = 640) to save DSP slices.
 
 ---
 
 ### Key Decisions Made
 
-*(To be filled in during the meeting)*
+*(To be filled during meeting)*
 
 ---
 
-### Action Items
+### Action Items & Assignments
 
-| Task | Owner | Due Date | Status |
+| Task | Assignee | Due Date | Status |
 | :--- | :--- | :--- | :--- |
-| Present Z-buffer and barycentric weight research | Wint — @wintlaekyaw | 2026-11-09 (this meeting) | Due |
-| Implement `frame_controller` | TBD | TBD | Unassigned |
-| Implement `triangle_setup` | TBD | TBD | Unassigned |
-| Implement `bbox_walker` | TBD | TBD | Unassigned |
-| Implement `fragment_interpolator` | TBD | TBD | Unassigned |
-| Implement `pixel_commit` | TBD | TBD | Unassigned |
-| Implement `buffer_clear` | TBD | TBD | Unassigned |
-| Implement `z_buffer` | TBD | TBD | Unassigned |
-| Commit `edam.yml` changes | TBD | TBD | Pending |
-| Write rasterizer testbench | TBD | TBD | Unassigned |
+| Present Z-buffer research & barycentric math | Wint | 2026-11-10 | Ready |
+| `triangle_setup` implementation | TBD | TBD | Unassigned |
+| `bbox_walker` & accumulator stepping | TBD | TBD | Unassigned |
+| `pixel_commit` & depth-test logic | TBD | TBD | Unassigned |
+| `buffer_clear` & `frame_controller` | TBD | TBD | Unassigned |
+| `z_buffer` BRAM wrapper | TBD | TBD | Unassigned |
+| Cocotb testbenches in `tb/rasterizer/` | TBD | TBD | Unassigned |
 
 ---
 
 ### Next Steps & Follow-Up
-* **Next Meeting:** TBD
+* **Next Meeting:** TBD (tentatively 2026-11-17 | 12:00 PST)
+* Review and commit pending `edam.yml` updates adding new modules to the build.
