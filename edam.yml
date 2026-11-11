@@ -16,13 +16,29 @@ files:
   file_type: systemVerilogSource
 - name: rtl/common/button.sv
   file_type: systemVerilogSource
+- name: rtl/common/memory_write_mux.sv
+  file_type: systemVerilogSource
 - name: rtl/common/sync_fifo.sv
   file_type: systemVerilogSource
 - name: rtl/geometry/dot_product.sv
   file_type: systemVerilogSource
+- name: rtl/rasterizer/bbox_walker.sv
+  file_type: systemVerilogSource
+- name: rtl/rasterizer/buffer_clear.sv
+  file_type: systemVerilogSource
 - name: rtl/rasterizer/edge_evaluator.sv
   file_type: systemVerilogSource
+- name: rtl/rasterizer/fragment_interpolator.sv
+  file_type: systemVerilogSource
+- name: rtl/rasterizer/frame_controller.sv
+  file_type: systemVerilogSource
+- name: rtl/rasterizer/pixel_commit.sv
+  file_type: systemVerilogSource
 - name: rtl/rasterizer/rasterizer_top.sv
+  file_type: systemVerilogSource
+- name: rtl/rasterizer/triangle_setup.sv
+  file_type: systemVerilogSource
+- name: rtl/rasterizer/z_buffer.sv
   file_type: systemVerilogSource
 - name: rtl/top.sv
   file_type: systemVerilogSource
