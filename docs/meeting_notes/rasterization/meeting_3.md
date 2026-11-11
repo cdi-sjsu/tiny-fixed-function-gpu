@@ -1,16 +1,16 @@
 # Rasterization Group Meeting 3
 
-**Date & Time:** 2026-11-10 | 12:00 – 13:00 (PST)<br>
+**Date & Time:** 2026-11-10 | 12:00 – 13:15 (PST)<br>
 **Location / Link:** ENGR 370
-**Facilitator:** Kyle Ringor
-**Note Taker:** Kyle Ringor
-**Meeting Status:** Scheduled
+**Facilitator:** Kyle
+**Note Taker:** Kyle
+**Meeting Status:** Completed on November 10, 2026.
 
 ---
 
 ### Attendees
-* **Present:** Kyle Ringor, Sean, Wint, Rayland
-* **Absent / Excused:** None
+* **Present:** Kyle, Wint, Rayland
+* **Absent / Excused:** Sean
 
 ---
 
@@ -90,7 +90,7 @@ flowchart TD
     subgraph Pipeline ["Rasterization Pipeline"]
         CMD["commands (raster_command_t)"]
         GATE{"draw_enable gate"}
-        FIFO["triangle_fifo (sync_fifo)"]
+        FIFO["triangle_fifo"]
         TS["triangle_setup"]
         BW["bbox_walker"]
         EE["edge_evaluator"]
@@ -132,21 +132,23 @@ flowchart TD
 
 ##### Module Status & Assignments
 
-* [`frame_controller`](../../../rtl/rasterizer/frame_controller.sv) — *Stubbed*
+* [`frame_controller`](../../../rtl/rasterizer/frame_controller.sv) — *Stubbed* (**Owner: Kyle**)
   * Main FSM: IDLE → CLEAR → DRAW → DRAIN → DONE. Gates incoming commands, starts buffer clearing, and asserts `frame_done` once the fence returns.
-* [`triangle_setup`](../../../rtl/rasterizer/triangle_setup.sv) — *Stubbed*
+* `triangle_fifo` (`rtl/rasterizer/triangle_fifo.sv`) — *To be added* (**Owner: Sean**)
+  * Input command FIFO (`stream_if` consumer/producer + `busy`) instantiated in `rasterizer_top`, replacing the generic `sync_fifo` stub.
+* [`triangle_setup`](../../../rtl/rasterizer/triangle_setup.sv) — *Stubbed* (**Owner: TBD**)
   * Bounding box calculation, screen clamping, winding check, and initial edge/attribute gradients at the starting pixel.
-* [`bbox_walker`](../../../rtl/rasterizer/bbox_walker.sv) — *Stubbed*
+* [`bbox_walker`](../../../rtl/rasterizer/bbox_walker.sv) — *Stubbed* (**Owners: Wint & Rayland**)
   * Traverses bounding box scanlines and steps edge, depth, and color accumulators.
-* [`edge_evaluator`](../../../rtl/rasterizer/edge_evaluator.sv) — *Stubbed*
+* [`edge_evaluator`](../../../rtl/rasterizer/edge_evaluator.sv) — *Stubbed* (**Owners: Wint & Rayland**)
   * Tests sample coverage against all three edges, applies top-left tie-breaking rules, discards outside samples, and passes end-of-frame markers.
-* [`fragment_interpolator`](../../../rtl/rasterizer/fragment_interpolator.sv) — *Stubbed*
+* [`fragment_interpolator`](../../../rtl/rasterizer/fragment_interpolator.sv) — *Stubbed* (**Owners: Wint & Rayland**)
   * Rounds and clamps 48-bit depth/color attributes into 16-bit depth and 12-bit RGB444 fragments.
-* [`pixel_commit`](../../../rtl/rasterizer/pixel_commit.sv) — *Stubbed*
+* [`pixel_commit`](../../../rtl/rasterizer/pixel_commit.sv) — *Stubbed* (**Owners: Wint & Rayland**)
   * Read-modify-write depth test, writeback to depth/color, and fence token generation for frame completion.
-* [`buffer_clear`](../../../rtl/rasterizer/buffer_clear.sv) — *Stubbed*
+* [`buffer_clear`](../../../rtl/rasterizer/buffer_clear.sv) — *Stubbed* (**Owner: TBD**)
   * Increments through all 307,200 pixel addresses writing clear depth and background color.
-* [`z_buffer`](../../../rtl/rasterizer/z_buffer.sv) — *Stubbed*
+* [`z_buffer`](../../../rtl/rasterizer/z_buffer.sv) — *Stubbed* (**Owner: TBD**)
   * BRAM wrapper exposing `memory_read_if` and `memory_write_if`.
 * [`memory_write_mux`](../../../rtl/common/memory_write_mux.sv) — **Implemented**
   * Arbitrates write access between `buffer_clear` and `pixel_commit`.
@@ -169,22 +171,33 @@ flowchart TD
 
 ### Key Decisions Made
 
-*(To be filled during meeting)*
+* **Initial module ownership:**
+  * **Kyle:** `frame_controller` (main frame-control FSM).
+  * **Wint & Rayland:** `bbox_walker` and downstream pipeline stages (`bbox_walker`, `edge_evaluator`, `fragment_interpolator`, `pixel_commit`).
+  * **Sean:** `triangle_fifo` queue (assigned while absent; confirm with Sean).
+  * **Undecided:** Ownership of `triangle_setup`, `buffer_clear`, and `z_buffer` remains TBD.
+  * Each module owner also writes the corresponding Cocotb testbench in `tb/rasterizer/`.
+* **Queue consolidation:** Use `triangle_fifo` directly in `rtl/rasterizer/` instead of maintaining a separate generic `sync_fifo` stub in `rtl/common/`.
+* **Open design questions:** Resolution/BRAM sizing (640 × 480 vs. 320 × 240 on Arty A7-100T) and affine Gouraud confirmation for Demo 1 remain open for follow-up.
 
 ---
 
 ### Action Items & Assignments
 
+Each module task includes its corresponding Cocotb testbench in `tb/rasterizer/`.
+
 | Task | Assignee | Due Date | Status |
 | :--- | :--- | :--- | :--- |
-| Present Z-buffer research & barycentric math | Wint | 2026-11-10 | Ready |
+| Present Z-buffer research & barycentric math | Wint | 2026-11-10 | Done |
+| `frame_controller` FSM implementation | Kyle | TBD | Assigned |
+| `triangle_fifo` queue (replace generic `sync_fifo`) | Sean | TBD | Assigned |
+| `bbox_walker` & accumulator stepping | Wint & Rayland | TBD | Assigned |
+| `edge_evaluator` coverage & top-left rules | Wint & Rayland | TBD | Assigned |
+| `fragment_interpolator` rounding & clamping | Wint & Rayland | TBD | Assigned |
+| `pixel_commit` & depth-test logic | Wint & Rayland | TBD | Assigned |
 | `triangle_setup` implementation | TBD | TBD | Unassigned |
-| `bbox_walker` & accumulator stepping | TBD | TBD | Unassigned |
-| `edge_evaluator` coverage & top-left rules | TBD | TBD | Unassigned |
-| `pixel_commit` & depth-test logic | TBD | TBD | Unassigned |
-| `buffer_clear` & `frame_controller` | TBD | TBD | Unassigned |
+| `buffer_clear` implementation | TBD | TBD | Unassigned |
 | `z_buffer` BRAM wrapper | TBD | TBD | Unassigned |
-| Cocotb testbenches in `tb/rasterizer/` | TBD | TBD | Unassigned |
 
 ---
 
