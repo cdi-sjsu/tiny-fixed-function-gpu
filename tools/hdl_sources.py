@@ -18,7 +18,7 @@ class HdlSource:
 def discover_sources(
     source_root: Path, *, project_root: Path = PROJECT_ROOT
 ) -> tuple[HdlSource, ...]:
-    """Return packages first, then other sources, each in stable path order.
+    """Return packages, interfaces, then modules, each in stable path order.
 
     An existing empty RTL directory is valid while this project is being scaffolded.
     """
@@ -37,7 +37,10 @@ def discover_sources(
             for path in source_root.rglob("*")
             if path.is_file() and path.suffix in {".v", ".sv"}
         ),
-        key=lambda path: (not path.name.endswith("_pkg.sv"), path.relative_to(project_root)),
+        key=lambda path: (
+            0 if path.name.endswith("_pkg.sv") else 1 if path.name.endswith("_if.sv") else 2,
+            path.relative_to(project_root),
+        ),
     )
     return tuple(
         HdlSource(
