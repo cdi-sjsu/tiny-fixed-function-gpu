@@ -17,9 +17,6 @@ module edge_evaluator (
     // Output stream
     stream_if.producer output_stream  //! Output data and ready/valid handshake
 );
-    // TODO: Keep pixels with all three edges > 0, or == 0 on included edges.
-    // Skip pixels outside the triangle. Always pass end-of-frame markers.
-    // Not implemented yet. Keep ready and valid low for now.
     assign input_stream.ready = 1'b0;
     assign output_stream.valid = 1'b0;
     assign output_stream.data = '0;
