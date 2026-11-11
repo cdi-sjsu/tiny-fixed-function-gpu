@@ -1,3 +1,7 @@
+# Meeting 2 behavioral prototype (Y-up coordinates, integer vertices, float weights).
+# Note: Hardware RTL (gpu_pkg) uses top-left origin (Y-down) and Q16.4 fixed-point coordinates.
+
+
 def edge_function(x: tuple[int, int], y: tuple[int, int], p: tuple[int, int]):
     """Used ONLY for the initial starting pixel"""
     return (y[0] - x[0]) * (p[1] - x[1]) - (y[1] - x[1]) * (p[0] - x[0])

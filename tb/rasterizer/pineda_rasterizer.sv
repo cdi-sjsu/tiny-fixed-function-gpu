@@ -1,3 +1,5 @@
+// Meeting 2 behavioral prototype (Y-up coordinates, integer vertices, real weights).
+// Note: Hardware RTL (gpu_pkg) uses top-left origin (Y-down) and Q16.4 fixed-point coordinates.
 module pineda_rasterizer;
 
     // Define a struct for our 2D coordinates
