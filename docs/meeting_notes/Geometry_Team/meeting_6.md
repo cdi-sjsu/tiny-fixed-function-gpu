@@ -22,21 +22,24 @@
 ---
 
 ## Clipping Implementation Review
-
-
-## This Note Header is to label what is needed from
-
-
-Sean -
-Preston -
+its not clipping.
+- He is using a thing called outcodes, its the to choen sutherland algorithim as the blueprint he is using
+- The module decides what to do based off the label
+- it has reject, gaurd-fail
+- Far things is handled by rasterization
+- Outcode has a bit order for saying if things are LRTBNF
+- The outputs of this will be used for clipping but its the flags that allow us
+-     the send flag will allow us to send the existing vertex that wont need clipping however the new clipping vertexes will be needed to go through clipping
+- hopefully in this initial test we wont need to do clipping yet
+- Next jobs is : Clipping, the divider for w to make 1/w, and clocking timing.
 
 ## Action Item that will be assigned
 
 Preston - Test bench Finish
-Sean - 
-Sachin - Clipping module Finish it
+Sean - ?
+Sachin - Clipping module Still
 Lam - Documentation Compilation Into Github ~ for the next 3 weeks
-Nic - make the Top Module
+Nic - Yep,
 
 ### Action Items
 Issues are made on the GitHub
