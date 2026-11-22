@@ -14,7 +14,7 @@ FPGA with VGA output.
 | [GPU Rasterizer](https://github.com/orgs/cdi-sjsu/teams/gpu-rasterizer) | Triangle rasterization, depth, and color | [@Nativity8904](https://github.com/Nativity8904) | [@Forensic257](https://github.com/Forensic257)<br>[@Umar316798](https://github.com/Umar316798)<br>[@raylandho](https://github.com/raylandho)<br>[@wintlaekyaw](https://github.com/wintlaekyaw)<br>[@imnttoxicanymore](https://github.com/imnttoxicanymore) | [rtl/rasterizer/](rtl/rasterizer/) | Rasterizer Team |
 | [GPU Geometry](https://github.com/orgs/cdi-sjsu/teams/gpu-geometry) | Vertex transforms and triangle interfaces | [@nicojeda189](https://github.com/nicojeda189) | [@Moodlethenoodle](https://github.com/Moodlethenoodle)<br>[@Sachin-Swami21](https://github.com/Sachin-Swami21)<br>[@imnttoxicanymore](https://github.com/imnttoxicanymore) | [rtl/geometry/](rtl/geometry/) | Geometry Team |
 | [GPU Python Preprocessing](https://github.com/orgs/cdi-sjsu/teams/gpu-python-preprocessing) | Preprocessing scripts and generated GPU data | To be decided | No members assigned | `scripts/` | Python Preprocessing Team |
-| [GPU VGA](https://github.com/orgs/cdi-sjsu/teams/gpu-vga) | Framebuffer and VGA display output | To be decided | [@DelosReyesJordan](https://github.com/DelosReyesJordan) <br>[@ScubaSteveo209](https://github.com/ScubaSteveo209)<br>| [rtl/vga/](rtl/vga/) | VGA Team |
+| [GPU VGA](https://github.com/orgs/cdi-sjsu/teams/gpu-vga) | Framebuffer and VGA display output | To be decided | [@DelosReyesJordan](https://github.com/DelosReyesJordan) <br> [@5722](https://github.com/5722) <br>[@ScubaSteveo209](https://github.com/ScubaSteveo209)<br>| [rtl/vga/](rtl/vga/) | VGA Team |
 
 ## Getting Started
 
